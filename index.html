@@ -16,6 +16,7 @@
             --signature-color: #adb5bd;
         }
 
+        /* 해상도 최적화 */
         html { font-size: 16px; }
         @media (min-width: 2500px) { html { font-size: 20px; } }
         @media (max-width: 480px) { html { font-size: 14px; } }
@@ -29,22 +30,21 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.1); position: relative;
         }
         
-        /* 시그니처 및 도움말 아이콘 */
+        /* 상단 우측 버튼 및 서명 */
         .top-right-btns { position: absolute; top: 1rem; right: 1.5rem; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
         .signature-top { font-size: 0.7rem; color: var(--signature-color); font-weight: bold; letter-spacing: 1px; }
         .help-icon { 
-            width: 24px; height: 24px; background: #e9ecef; border-radius: 50%; 
+            width: 24px; height: 24px; background: #f1f3f5; border-radius: 50%; 
             display: flex; justify-content: center; align-items: center; 
             cursor: pointer; font-weight: bold; color: #adb5bd; border: 1px solid #dee2e6;
-            transition: 0.2s;
+            transition: 0.2s; font-size: 0.8rem;
         }
         .help-icon:hover { background: #dee2e6; color: #495057; }
 
         .page-header { text-align: center; margin-bottom: 1rem; padding-bottom: 0.8rem; border-bottom: 2px solid #f1f3f5; }
         .page-header h1 { font-size: clamp(1.5rem, 5vw, 2.5rem); font-weight: 900; color: var(--text-main); margin: 0; white-space: nowrap; }
-        .sub-title { font-size: 1rem; color: #ff6b6b; font-weight: 700; margin-top: 4px; }
+        .sub-title { font-size: 1rem; color: #ff6b6b; font-weight: 700; margin-top: 5px; }
 
-        /* 설정 상단 바 */
         .top-settings { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; position: relative; z-index: 101; }
         .label-sm { font-size: 0.8rem; font-weight: bold; color: #868e96; text-transform: uppercase; margin-bottom: 4px; display: block; }
         .mem-input { width: 40px; padding: 6px; border: 2px solid #dee2e6; border-radius: 8px; text-align: center; font-weight: 900; font-size: 1.1rem; }
@@ -96,25 +96,22 @@
         .money-text { font-size: 1.8rem; font-weight: 900; color: var(--primary); margin-bottom: 10px; }
         .btn-copy-raw { padding: 10px 15px; background: #2b78e4; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-        /* 도움말 모달(팝업) 스타일 */
+        /* 도움말 모달 */
         #helpModal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 1000;
             backdrop-filter: blur(5px);
         }
-        .modal-content {
-            background: white; padding: 2rem; border-radius: 20px; width: 90%; max-width: 450px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative;
-        }
+        .modal-content { background: white; padding: 2rem; border-radius: 20px; width: 90%; max-width: 450px; position: relative; }
         .modal-content h2 { margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px; font-size: 1.4rem; }
         .modal-content ul { padding-left: 20px; line-height: 1.8; }
-        .close-btn { 
-            position: absolute; top: 1rem; right: 1rem; background: none; border: none; 
-            font-size: 1.5rem; cursor: pointer; color: #adb5bd; 
-        }
+        .close-btn { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #adb5bd; }
 
-        .footer { margin-top: 2rem; text-align: center; border-top: 2px solid #f1f3f5; padding-top: 1rem; }
-        .btn-reset { background: #f1f3f5; border: 1px solid #ced4da; color: #495057; padding: 8px 20px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: bold; }
+        /* 푸터 및 서명 디자인 복구 (은은하게) */
+        .footer { margin-top: 2rem; text-align: center; border-top: 1px solid #f1f3f5; padding-top: 1rem; }
+        .btn-reset { background: #f8f9fa; border: 1px solid #dee2e6; color: #adb5bd; padding: 8px 20px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
+        .btn-reset:hover { background: #f1f3f5; color: #495057; }
+        .signature-bottom { font-size: 0.7rem; color: #dee2e6; font-weight: bold; letter-spacing: 2px; margin-top: 15px; }
     </style>
 </head>
 <body>
@@ -191,7 +188,10 @@
         <button class="btn-copy-raw" onclick="copyRawMoney()">숫자만 복사</button>
     </div>
 
-    <div class="footer"><button class="btn-reset" onclick="resetAll()">데이터 전체 초기화</button><div class="signature-bottom">HABOM DESIGN WORKS</div></div>
+    <div class="footer">
+        <button class="btn-reset" onclick="resetAll()">데이터 전체 초기화</button>
+        <div class="signature-bottom">HABOM DESIGN WORKS</div>
+    </div>
 </div>
 
 <div id="helpModal">
@@ -199,14 +199,10 @@
         <button class="close-btn" onclick="closeHelp()">×</button>
         <h2>📖 사용 방법 안내</h2>
         <ul>
-            <li><b>시작:</b> 상단의 '선포팀' 버튼 중 하나를 눌러 게임을 시작하세요. (선포한 팀이 첫 공격)</li>
-            <li><b>득점:</b> 버튼을 누르거나 키보드 단축키를 사용하세요.
-                <br> - 우리팀: <b>Q</b> 또는 <b>1</b>
-                <br> - 상대팀: <b>E</b> 또는 <b>2</b>
-            </li>
-            <li><b>채팅 공유:</b> 검은색 스코어 박스를 클릭하면 <b>'00 00'</b> 형식이 복사됩니다.</li>
-            <li><b>정산:</b> 하단 <b>'숫자만 복사'</b>를 눌러 계좌 이체 시 활용하세요.</li>
-            <li><b>역선포:</b> 큰스 1점이 끝날 때마다 자동으로 안내됩니다.</li>
+            <li><b>시작:</b> 상단의 '선포팀' 버튼 중 하나를 눌러 게임을 시작하세요.</li>
+            <li><b>득점:</b> 버튼 클릭 또는 단축키 사용 (Q/1, E/2).</li>
+            <li><b>공유:</b> 검은색 박스 클릭 시 스코어 문자열 복사.</li>
+            <li><b>정산:</b> 하단 버튼으로 숫자만 복사해 이체 시 활용.</li>
         </ul>
     </div>
 </div>
@@ -223,7 +219,6 @@
 
     function openHelp() { document.getElementById('helpModal').style.display = 'flex'; }
     function closeHelp() { document.getElementById('helpModal').style.display = 'none'; }
-
     function setInitial(t) {
         state.isStarted = true; state.initial = t; state.currentSetAttacker = t; state.reverseTurn = (t === 'A') ? 'B' : 'A';
         document.getElementById('lockLayer').style.display = 'none';
@@ -231,7 +226,6 @@
         document.getElementById('initB').className = t === 'B' ? 'btn-init active-b' : 'btn-init';
         render();
     }
-
     function addWin(t) {
         if(!state.isStarted) return;
         let p = state.smallA + state.smallB, f = (p % 2 !== 0);
@@ -246,7 +240,6 @@
         }
         render();
     }
-
     function render() {
         if(!state.isStarted) return;
         document.getElementById('lScoreA').innerText = state.largeA; document.getElementById('lScoreB').innerText = state.largeB;
@@ -271,13 +264,11 @@
             lb.innerHTML += `<tr><td>${h.num}회</td><td class="${h.winner==='A'?'hist-winner-a':''}">${h.resA}승 ${h.winner==='A'?'🏆':''}</td><td class="${h.winner==='B'?'hist-winner-b':''}">${h.resB}승 ${h.winner==='B'?'🏆':''}</td></tr>`;
         });
     }
-
     function toggleLargeHistory() {
         const a = document.getElementById('largeHistoryArea'), b = document.getElementById('moreBtn');
         const s = a.style.display === 'block'; a.style.display = s ? 'none' : 'block';
         b.innerText = s ? '큰스 히스토리 더보기 (▼)' : '히스토리 접기 (▲)';
     }
-
     function copyScore() {
         const t = document.getElementById('chatDisplay').innerText;
         navigator.clipboard.writeText(t).then(() => {
@@ -285,12 +276,10 @@
             setTimeout(() => a.style.background = '#343a40', 300);
         });
     }
-
     function copyRawMoney() {
         const r = document.getElementById('moneyDisplay').dataset.raw || "0";
         navigator.clipboard.writeText(r).then(() => alert("숫자만 복사되었습니다: " + r));
     }
-
     function resetAll() {
         if(!confirm("모든 데이터를 초기화하시겠습니까?")) return;
         state = { isStarted: false, initial: 'A', currentSetAttacker: 'A', largeA: 0, largeB: 0, smallA: 0, smallB: 0, roundLogs: [], largeHistory: [], reverseTurn: 'B' };
@@ -301,6 +290,5 @@
         render();
     }
 </script>
-
 </body>
 </html>

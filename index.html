@@ -29,21 +29,26 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.1); position: relative;
         }
         
-        .signature-top { position: absolute; top: 1rem; right: 1.5rem; font-size: 0.7rem; color: var(--signature-color); font-weight: bold; letter-spacing: 1px; }
-        
-        .page-header { text-align: center; margin-bottom: 1rem; padding-bottom: 0.8rem; border-bottom: 2px solid #f1f3f5; }
-        .page-header h1 { 
-            font-size: clamp(1.5rem, 5vw, 2.5rem); 
-            font-weight: 900; color: var(--text-main); margin: 0; 
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        /* 시그니처 및 도움말 아이콘 */
+        .top-right-btns { position: absolute; top: 1rem; right: 1.5rem; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+        .signature-top { font-size: 0.7rem; color: var(--signature-color); font-weight: bold; letter-spacing: 1px; }
+        .help-icon { 
+            width: 24px; height: 24px; background: #e9ecef; border-radius: 50%; 
+            display: flex; justify-content: center; align-items: center; 
+            cursor: pointer; font-weight: bold; color: #adb5bd; border: 1px solid #dee2e6;
+            transition: 0.2s;
         }
+        .help-icon:hover { background: #dee2e6; color: #495057; }
+
+        .page-header { text-align: center; margin-bottom: 1rem; padding-bottom: 0.8rem; border-bottom: 2px solid #f1f3f5; }
+        .page-header h1 { font-size: clamp(1.5rem, 5vw, 2.5rem); font-weight: 900; color: var(--text-main); margin: 0; white-space: nowrap; }
         .sub-title { font-size: 1rem; color: #ff6b6b; font-weight: 700; margin-top: 4px; }
 
+        /* 설정 상단 바 */
         .top-settings { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; position: relative; z-index: 101; }
         .label-sm { font-size: 0.8rem; font-weight: bold; color: #868e96; text-transform: uppercase; margin-bottom: 4px; display: block; }
         .mem-input { width: 40px; padding: 6px; border: 2px solid #dee2e6; border-radius: 8px; text-align: center; font-weight: 900; font-size: 1.1rem; }
-        .init-btns { display: flex; gap: 6px; width: 100%; flex: 1; }
-        .btn-init { flex: 1; padding: 12px; border: 2px solid #dee2e6; border-radius: 12px; background: white; font-size: 1rem; cursor: pointer; font-weight: bold; color: #636e72; transition: 0.2s; }
+        .btn-init { flex: 1; padding: 12px; border: 2px solid #dee2e6; border-radius: 12px; background: white; font-size: 1rem; cursor: pointer; font-weight: bold; color: #636e72; }
         .btn-init.active-a { background: var(--primary); color: white; border-color: var(--primary); }
         .btn-init.active-b { background: var(--danger); color: white; border-color: var(--danger); }
 
@@ -55,12 +60,8 @@
             color: white; font-weight: bold; font-size: 1.2rem; text-align: center; line-height: 1.6;
         }
 
-        .reverse-display { 
-            background: #fff0f6; padding: 10px 25px; border-radius: 50px; text-align: center; 
-            margin: 0 auto 1.5rem auto; border: 3px solid #ffdeeb; display: table;
-        }
-        .reverse-display span { font-size: 0.9rem; color: #f06595; font-weight: 800; }
-        .reverse-display b { font-size: 1.2rem; margin-left: 8px; text-decoration: underline; }
+        .reverse-display { background: #fff0f6; padding: 10px 25px; border-radius: 50px; text-align: center; margin: 0 auto 1.5rem auto; border: 3px solid #ffdeeb; display: table; }
+        .reverse-display b { font-size: 1.2rem; margin-left: 8px; text-decoration: underline; color: #f06595; }
 
         .scoreboard { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; background: #fbfbfb; padding: 2rem; border-radius: 24px; border: 1px solid #f1f3f5; }
         .team-side { text-align: center; flex: 1; }
@@ -72,23 +73,18 @@
         .bg-def { background: var(--def-color); }
 
         .action-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
-        .btn-win { height: 100px; border: none; border-radius: 24px; font-size: 1.6rem; font-weight: 900; color: white; cursor: pointer; box-shadow: 0 6px 15px rgba(0,0,0,0.12); transition: 0.1s; position: relative; }
-        .btn-win:active { transform: scale(0.95); }
+        .btn-win { height: 100px; border: none; border-radius: 24px; font-size: 1.6rem; font-weight: 900; color: white; cursor: pointer; box-shadow: 0 6px 15px rgba(0,0,0,0.12); position: relative; }
+        .key-hint { position: absolute; top: 8px; left: 12px; font-size: 0.75rem; color: rgba(255,255,255,0.7); font-weight: bold; }
         .btn-win-a { background: linear-gradient(135deg, #4dabf7, #228be6); }
         .btn-win-b { background: linear-gradient(135deg, #ff8787, #fa5252); }
-        
-        /* 키 힌트 표시 */
-        .key-hint { position: absolute; top: 8px; left: 12px; font-size: 0.75rem; color: rgba(255,255,255,0.7); font-weight: bold; }
 
         .copy-area { background: #343a40; color: white; padding: 12px; border-radius: 15px; text-align: center; margin-bottom: 1.5rem; cursor: pointer; }
         .chat-text { font-size: 2.5rem; font-weight: 900; letter-spacing: 4px; line-height: 1.1; }
         
         .history-container { background: #fff; border: 2px solid #eee; border-radius: 16px; overflow: hidden; margin-bottom: 10px; }
         .hist-table { width: 100%; border-collapse: collapse; text-align: center; font-size: 1rem; table-layout: fixed; }
-        .hist-table th { font-size: 0.9rem; padding: 10px; border-bottom: 2px solid #eee; }
-        .th-a { background: #e7f5ff; color: var(--primary) !important; width: 40%; }
-        .th-b { background: #fff5f5; color: var(--danger) !important; width: 40%; }
-        .th-round { background: #f8f9fa; color: #868e96; width: 20%; }
+        .th-a { background: #e7f5ff; color: var(--primary) !important; }
+        .th-b { background: #fff5f5; color: var(--danger) !important; }
         .hist-table td { padding: 12px; border-bottom: 1px solid #f8f9fa; font-weight: 800; }
         .hist-winner-a { color: var(--primary); background: #f1f9ff; }
         .hist-winner-b { color: var(--danger); background: #fff8f8; }
@@ -97,19 +93,38 @@
         .large-history-area { margin-top: 10px; display: none; }
 
         .settle-section { margin-top: 2rem; padding: 1.5rem; background: #e7f5ff; border-radius: 20px; text-align: center; }
-        .money-row { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; }
-        .money-text { font-size: 1.8rem; font-weight: 900; color: var(--primary); }
-        .btn-copy-raw { padding: 10px 15px; background: #2b78e4; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
+        .money-text { font-size: 1.8rem; font-weight: 900; color: var(--primary); margin-bottom: 10px; }
+        .btn-copy-raw { padding: 10px 15px; background: #2b78e4; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+
+        /* 도움말 모달(팝업) 스타일 */
+        #helpModal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: white; padding: 2rem; border-radius: 20px; width: 90%; max-width: 450px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative;
+        }
+        .modal-content h2 { margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px; font-size: 1.4rem; }
+        .modal-content ul { padding-left: 20px; line-height: 1.8; }
+        .close-btn { 
+            position: absolute; top: 1rem; right: 1rem; background: none; border: none; 
+            font-size: 1.5rem; cursor: pointer; color: #adb5bd; 
+        }
 
         .footer { margin-top: 2rem; text-align: center; border-top: 2px solid #f1f3f5; padding-top: 1rem; }
         .btn-reset { background: #f1f3f5; border: 1px solid #ced4da; color: #495057; padding: 8px 20px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: bold; }
-        .signature-bottom { font-size: 0.7rem; color: #dee2e6; font-weight: bold; letter-spacing: 2px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="signature-top">CREATED BY HABOM</div>
+    <div class="top-right-btns">
+        <div class="signature-top">CREATED BY HABOM</div>
+        <div class="help-icon" onclick="openHelp()">?</div>
+    </div>
+
     <div class="page-header">
         <h1>⚔️ 지상 RP 스코어 보드 ⚔️</h1>
         <p class="sub-title">당신도 이제 라운드걸 ✨ 찡긋- 😉💕</p>
@@ -123,7 +138,7 @@
                 <span style="font-weight: bold; color: #636e72;">명</span>
             </div>
         </div>
-        <div class="init-btns">
+        <div class="init-btns" style="display:flex; gap:10px; flex:1;">
             <button id="initA" class="btn-init" onclick="setInitial('A')">우리팀 선포</button>
             <button id="initB" class="btn-init" onclick="setInitial('B')">상대팀 선포</button>
         </div>
@@ -154,14 +169,8 @@
         </div>
 
         <div class="action-btns">
-            <button class="btn-win btn-win-a" onclick="addWin('A')">
-                <span class="key-hint">Q / 1</span>
-                우리팀 득점
-            </button>
-            <button class="btn-win btn-win-b" onclick="addWin('B')">
-                <span class="key-hint">E / 2</span>
-                상대팀 득점
-            </button>
+            <button class="btn-win btn-win-a" onclick="addWin('A')"><span class="key-hint">Q / 1</span>우리팀 득점</button>
+            <button class="btn-win btn-win-b" onclick="addWin('B')"><span class="key-hint">E / 2</span>상대팀 득점</button>
         </div>
 
         <div class="copy-area" onclick="copyScore()">
@@ -170,86 +179,68 @@
         </div>
 
         <div style="text-align:center; margin-bottom:8px;"><span class="label-sm">📊 작스 히스토리 (현재 판)</span></div>
-        <div class="history-container">
-            <table class="hist-table">
-                <thead>
-                    <tr>
-                        <th class="th-round">라운드</th>
-                        <th class="th-a">🔵 우리팀</th>
-                        <th class="th-b">🔴 상대팀</th>
-                    </tr>
-                </thead>
-                <tbody id="smallHistoryBody"></tbody>
-            </table>
-        </div>
+        <div class="history-container"><table class="hist-table"><thead><tr><th style="width:20%">R</th><th class="th-a">우리팀</th><th class="th-b">상대팀</th></tr></thead><tbody id="smallHistoryBody"></tbody></table></div>
 
         <button class="btn-more" id="moreBtn" onclick="toggleLargeHistory()">큰스 히스토리 더보기 (▼)</button>
-        <div id="largeHistoryArea" class="large-history-area">
-            <div style="text-align:center; margin:1.5rem 0 8px 0;"><span class="label-sm">📜 큰스 최종 결과 모음</span></div>
-            <div class="history-container">
-                <table class="hist-table">
-                    <thead>
-                        <tr>
-                            <th class="th-round">회차</th>
-                            <th class="th-a">🔵 우리팀</th>
-                            <th class="th-b">🔴 상대팀</th>
-                        </tr>
-                    </thead>
-                    <tbody id="largeHistoryBody"></tbody>
-                </table>
-            </div>
-        </div>
+        <div id="largeHistoryArea" class="large-history-area"><div style="text-align:center; margin:1.5rem 0 8px 0;"><span class="label-sm">📜 큰스 결과 모음</span></div><div class="history-container"><table class="hist-table"><thead><tr><th style="width:20%">회</th><th class="th-a">우리팀</th><th class="th-b">상대팀</th></tr></thead><tbody id="largeHistoryBody"></tbody></table></div></div>
     </div>
 
     <div class="settle-section">
         <span class="label-sm" style="color: #748ffc;">💰 현재 예상 패배금</span>
-        <div class="money-row">
-            <div id="moneyDisplay" class="money-text">0원</div>
-            <button class="btn-copy-raw" onclick="copyRawMoney()">숫자만 복사</button>
-        </div>
+        <div id="moneyDisplay" class="money-text">0원</div>
+        <button class="btn-copy-raw" onclick="copyRawMoney()">숫자만 복사</button>
     </div>
 
-    <div class="footer">
-        <button class="btn-reset" onclick="resetAll()">데이터 전체 초기화</button>
-        <div class="signature-bottom">HABOM DESIGN WORKS</div>
+    <div class="footer"><button class="btn-reset" onclick="resetAll()">데이터 전체 초기화</button><div class="signature-bottom">HABOM DESIGN WORKS</div></div>
+</div>
+
+<div id="helpModal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeHelp()">×</button>
+        <h2>📖 사용 방법 안내</h2>
+        <ul>
+            <li><b>시작:</b> 상단의 '선포팀' 버튼 중 하나를 눌러 게임을 시작하세요. (선포한 팀이 첫 공격)</li>
+            <li><b>득점:</b> 버튼을 누르거나 키보드 단축키를 사용하세요.
+                <br> - 우리팀: <b>Q</b> 또는 <b>1</b>
+                <br> - 상대팀: <b>E</b> 또는 <b>2</b>
+            </li>
+            <li><b>채팅 공유:</b> 검은색 스코어 박스를 클릭하면 <b>'00 00'</b> 형식이 복사됩니다.</li>
+            <li><b>정산:</b> 하단 <b>'숫자만 복사'</b>를 눌러 계좌 이체 시 활용하세요.</li>
+            <li><b>역선포:</b> 큰스 1점이 끝날 때마다 자동으로 안내됩니다.</li>
+        </ul>
     </div>
 </div>
 
 <script>
     let state = { isStarted: false, initial: 'A', currentSetAttacker: 'A', largeA: 0, largeB: 0, smallA: 0, smallB: 0, roundLogs: [], largeHistory: [], reverseTurn: 'B' };
 
-    // 키보드 단축키 이벤트 리스너 추가
-    window.addEventListener('keydown', function(e) {
-        // 인원수 입력창에 포커스가 있을 때는 작동하지 않음
-        if (document.activeElement.tagName === 'INPUT') return;
-        if (!state.isStarted) return;
-
-        const key = e.key.toLowerCase();
-        if (key === 'q' || key === '1') {
-            addWin('A');
-        } else if (key === 'e' || key === '2') {
-            addWin('B');
-        }
+    window.addEventListener('keydown', e => {
+        if (document.activeElement.tagName === 'INPUT' || !state.isStarted) return;
+        const k = e.key.toLowerCase();
+        if (k === 'q' || k === '1') addWin('A');
+        else if (k === 'e' || k === '2') addWin('B');
     });
 
-    function setInitial(team) {
-        state.isStarted = true; state.initial = team; state.currentSetAttacker = team; state.reverseTurn = (team === 'A') ? 'B' : 'A';
+    function openHelp() { document.getElementById('helpModal').style.display = 'flex'; }
+    function closeHelp() { document.getElementById('helpModal').style.display = 'none'; }
+
+    function setInitial(t) {
+        state.isStarted = true; state.initial = t; state.currentSetAttacker = t; state.reverseTurn = (t === 'A') ? 'B' : 'A';
         document.getElementById('lockLayer').style.display = 'none';
-        document.getElementById('initA').className = team === 'A' ? 'btn-init active-a' : 'btn-init';
-        document.getElementById('initB').className = team === 'B' ? 'btn-init active-b' : 'btn-init';
+        document.getElementById('initA').className = t === 'A' ? 'btn-init active-a' : 'btn-init';
+        document.getElementById('initB').className = t === 'B' ? 'btn-init active-b' : 'btn-init';
         render();
     }
 
-    function addWin(team) {
+    function addWin(t) {
         if(!state.isStarted) return;
-        let played = state.smallA + state.smallB;
-        let isFlipped = (played % 2 !== 0);
-        let teamASide = (state.currentSetAttacker === 'A') ? (isFlipped ? '수비' : '공격') : (isFlipped ? '공격' : '수비');
-        state.roundLogs.push({ winner: team, sideA: teamASide, sideB: (teamASide === '공격' ? '수비' : '공격') });
-        if(team === 'A') state.smallA++; else state.smallB++;
+        let p = state.smallA + state.smallB, f = (p % 2 !== 0);
+        let sA = (state.currentSetAttacker === 'A') ? (f ? '수비' : '공격') : (f ? '공격' : '수비');
+        state.roundLogs.push({ winner: t, sideA: sA, sideB: (sA === '공격' ? '수비' : '공격') });
+        if(t === 'A') state.smallA++; else state.smallB++;
         if(state.smallA === 3 || state.smallB === 3) {
-            state.largeHistory.push({ num: state.largeA + state.largeB + 1, resA: state.smallA, resB: state.smallB, winner: team });
-            if(state.smallA === 3) state.largeA++; else state.largeB++;
+            state.largeHistory.push({ num: state.largeA + state.largeB + 1, resA: state.smallA, resB: state.smallB, winner: t });
+            if(t === 'A') state.largeA++; else state.largeB++;
             state.currentSetAttacker = state.reverseTurn; state.reverseTurn = (state.reverseTurn === 'A') ? 'B' : 'A';
             state.smallA = 0; state.smallB = 0; state.roundLogs = [];
         }
@@ -260,49 +251,44 @@
         if(!state.isStarted) return;
         document.getElementById('lScoreA').innerText = state.largeA; document.getElementById('lScoreB').innerText = state.largeB;
         document.getElementById('sScoreA').innerText = state.smallA; document.getElementById('sScoreB').innerText = state.smallB;
-        let played = state.smallA + state.smallB; let isFlipped = (played % 2 !== 0);
-        let teamASide = (state.currentSetAttacker === 'A') ? (isFlipped ? '수비' : '공격') : (isFlipped ? '공격' : '수비');
-        document.getElementById('badgeA').innerText = teamASide; document.getElementById('badgeA').className = teamASide === '공격' ? 'pos-badge bg-atk' : 'pos-badge bg-def';
-        document.getElementById('badgeB').innerText = (teamASide === '공격' ? '수비' : '공격'); document.getElementById('badgeB').className = teamASide === '수비' ? 'pos-badge bg-atk' : 'pos-badge bg-def';
-        const rev = document.getElementById('revTeam'); rev.innerText = state.reverseTurn === 'A' ? '우리팀' : '상대팀';
-        rev.style.color = state.reverseTurn === 'A' ? 'var(--primary)' : 'var(--danger)';
+        let p = state.smallA + state.smallB, f = (p % 2 !== 0);
+        let sA = (state.currentSetAttacker === 'A') ? (f ? '수비' : '공격') : (f ? '공격' : '수비');
+        document.getElementById('badgeA').innerText = sA; document.getElementById('badgeA').className = sA === '공격' ? 'pos-badge bg-atk' : 'pos-badge bg-def';
+        document.getElementById('badgeB').innerText = (sA === '공격' ? '수비' : '공격'); document.getElementById('badgeB').className = sA === '수비' ? 'pos-badge bg-atk' : 'pos-badge bg-def';
+        const r = document.getElementById('revTeam'); r.innerText = state.reverseTurn === 'A' ? '우리팀' : '상대팀';
+        r.style.color = state.reverseTurn === 'A' ? 'var(--primary)' : 'var(--danger)';
         document.getElementById('chatDisplay').innerText = `${state.largeA}${state.largeB} ${state.smallA}${state.smallB}`;
-        const money = Math.abs(state.largeA - state.largeB) * document.getElementById('mems').value * 30000000;
-        document.getElementById('moneyDisplay').innerText = money.toLocaleString() + "원"; document.getElementById('moneyDisplay').dataset.raw = money;
-
-        const sBody = document.getElementById('smallHistoryBody'); sBody.innerHTML = '';
+        const m = Math.abs(state.largeA - state.largeB) * document.getElementById('mems').value * 30000000;
+        document.getElementById('moneyDisplay').innerText = m.toLocaleString() + "원"; document.getElementById('moneyDisplay').dataset.raw = m;
+        const sb = document.getElementById('smallHistoryBody'); sb.innerHTML = '';
         for(let i=0; i<5; i++) {
-            const log = state.roundLogs[i];
-            sBody.innerHTML += `<tr><td class="th-round">R${i+1}</td>
-                                <td class="${log && log.winner === 'A' ? 'hist-winner-a' : ''}">${log && log.winner === 'A' ? '['+log.sideA+'] 득점' : '-'}</td>
-                                <td class="${log && log.winner === 'B' ? 'hist-winner-b' : ''}">${log && log.winner === 'B' ? '['+log.sideB+'] 득점' : '-'}</td></tr>`;
+            const l = state.roundLogs[i];
+            sb.innerHTML += `<tr><td>R${i+1}</td><td class="${l&&l.winner==='A'?'hist-winner-a':''}">${l&&l.winner==='A'?'['+l.sideA+'] 득점':'-'}</td><td class="${l&&l.winner==='B'?'hist-winner-b':''}">${l&&l.winner==='B'?'['+l.sideB+'] 득점':'-'}</td></tr>`;
         }
-        const lBody = document.getElementById('largeHistoryBody'); lBody.innerHTML = '';
-        if(state.largeHistory.length === 0) lBody.innerHTML = '<tr><td colspan="3" style="color:#ced4da; padding:15px;">데이터 없음</td></tr>';
+        const lb = document.getElementById('largeHistoryBody'); lb.innerHTML = '';
+        if(state.largeHistory.length === 0) lb.innerHTML = '<tr><td colspan="3" style="color:#ced4da; padding:15px;">데이터 없음</td></tr>';
         else state.largeHistory.slice().reverse().forEach(h => {
-            lBody.innerHTML += `<tr><td class="th-round">${h.num}회</td>
-                                <td class="${h.winner === 'A' ? 'hist-winner-a' : ''}">${h.resA}승 ${h.winner === 'A' ? '🏆' : ''}</td>
-                                <td class="${h.winner === 'B' ? 'hist-winner-b' : ''}">${h.resB}승 ${h.winner === 'B' ? '🏆' : ''}</td></tr>`;
+            lb.innerHTML += `<tr><td>${h.num}회</td><td class="${h.winner==='A'?'hist-winner-a':''}">${h.resA}승 ${h.winner==='A'?'🏆':''}</td><td class="${h.winner==='B'?'hist-winner-b':''}">${h.resB}승 ${h.winner==='B'?'🏆':''}</td></tr>`;
         });
     }
 
     function toggleLargeHistory() {
-        const area = document.getElementById('largeHistoryArea'), btn = document.getElementById('moreBtn');
-        const isShow = area.style.display === 'block'; area.style.display = isShow ? 'none' : 'block';
-        btn.innerText = isShow ? '큰스 히스토리 더보기 (▼)' : '히스토리 접기 (▲)';
+        const a = document.getElementById('largeHistoryArea'), b = document.getElementById('moreBtn');
+        const s = a.style.display === 'block'; a.style.display = s ? 'none' : 'block';
+        b.innerText = s ? '큰스 히스토리 더보기 (▼)' : '히스토리 접기 (▲)';
     }
 
     function copyScore() {
-        const txt = document.getElementById('chatDisplay').innerText;
-        navigator.clipboard.writeText(txt).then(() => {
-            const area = document.querySelector('.copy-area'); area.style.background = '#40c057';
-            setTimeout(() => area.style.background = '#343a40', 300);
+        const t = document.getElementById('chatDisplay').innerText;
+        navigator.clipboard.writeText(t).then(() => {
+            const a = document.querySelector('.copy-area'); a.style.background = '#40c057';
+            setTimeout(() => a.style.background = '#343a40', 300);
         });
     }
 
     function copyRawMoney() {
-        const raw = document.getElementById('moneyDisplay').dataset.raw || "0";
-        navigator.clipboard.writeText(raw).then(() => alert("숫자만 복사되었습니다: " + raw));
+        const r = document.getElementById('moneyDisplay').dataset.raw || "0";
+        navigator.clipboard.writeText(r).then(() => alert("숫자만 복사되었습니다: " + r));
     }
 
     function resetAll() {

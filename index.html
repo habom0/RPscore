@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>지상 RP 스코어보드 - HABOM Edition</title>
 
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚔️</text></svg>">
@@ -20,22 +20,30 @@
             --def-color: #495057;
             --text-main: #2d3436;
             --signature-color: #adb5bd;
-            --input-height: 46px;
+            --input-height: 48px;
         }
 
-        /* 해상도 대응 스케일링 */
         html { font-size: 16px; }
         @media (min-width: 2500px) { html { font-size: 19px; } }
-        @media (max-width: 480px) { html { font-size: 14px; } }
 
-        body { font-family: 'Pretendard', sans-serif; background: var(--bg-color); display: flex; justify-content: center; padding: 1rem; margin: 0; }
+        body { 
+            font-family: 'Pretendard', -apple-system, sans-serif; 
+            background: var(--bg-color); 
+            display: flex; justify-content: center; 
+            padding: 10px; margin: 0; 
+            -webkit-text-size-adjust: none;
+        }
         
-        /* 컴팩트 컨테이너 */
         .container { 
             width: 100%; max-width: 760px; 
-            background: var(--card-bg); padding: 1.5rem 2.5rem; 
+            background: var(--card-bg); padding: 2rem; 
             border-radius: 32px; box-shadow: 0 15px 40px rgba(0,0,0,0.08); 
             position: relative; box-sizing: border-box;
+        }
+
+        /* 모바일 대응 패딩 축소 */
+        @media (max-width: 480px) {
+            .container { padding: 1.5rem 1rem; }
         }
         
         .top-right-btns { position: absolute; top: 1rem; right: 1.5rem; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
@@ -43,98 +51,111 @@
         .help-icon { 
             width: 24px; height: 24px; background: #f1f3f5; border-radius: 50%; 
             display: flex; justify-content: center; align-items: center; 
-            cursor: pointer; font-weight: bold; color: #adb5bd; border: 1px solid #dee2e6;
-            transition: 0.2s; font-size: 0.8rem;
+            cursor: pointer; font-weight: bold; color: #adb5bd; border: 1px solid #dee2e6; font-size: 0.8rem;
         }
 
-        .page-header { text-align: center; margin-bottom: 0.8rem; padding-bottom: 0.5rem; border-bottom: 2px solid #f1f3f5; }
-        .page-header h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 900; color: var(--text-main); margin: 0; }
+        .page-header { text-align: center; margin-bottom: 1rem; padding-bottom: 0.8rem; border-bottom: 2px solid #f1f3f5; }
+        .page-header h1 { font-size: clamp(1.4rem, 5vw, 2.2rem); font-weight: 900; color: var(--text-main); margin: 0; white-space: nowrap; }
         .sub-title { font-size: 0.9rem; color: #ff6b6b; font-weight: 700; margin-top: 3px; }
 
-        /* 설정 상단 바 */
-        .top-settings { display: flex; align-items: flex-end; justify-content: space-between; gap: 0.6rem; margin-bottom: 1rem; position: relative; z-index: 101; }
-        .label-sm { font-size: 0.7rem; font-weight: bold; color: #868e96; text-transform: uppercase; margin-bottom: 4px; display: block; }
+        /* [핵심 수정] 설정 영역 레이아웃 - 모바일에서 2줄 배치 */
+        .top-settings { 
+            display: grid; 
+            grid-template-columns: 1fr 1.2fr; /* PC 기본 2컬럼 */
+            gap: 10px; 
+            margin-bottom: 1.5rem; 
+            position: relative; z-index: 101; 
+        }
+
+        @media (max-width: 500px) {
+            .top-settings {
+                grid-template-columns: 1fr 1fr; /* 모바일에서 2x2 형태로 배치 유도 */
+            }
+            .init-btns {
+                grid-column: span 2; /* 선포 버튼들을 아래줄 전체 차지하게 */
+            }
+        }
+
+        .setting-group { display: flex; flex-direction: column; gap: 4px; }
+        .label-sm { font-size: 0.75rem; font-weight: bold; color: #868e96; text-transform: uppercase; white-space: nowrap; }
         
         .select-custom { 
-            height: var(--input-height); padding: 0 4px; border: 2px solid #dee2e6; border-radius: 12px; 
-            font-weight: 900; font-size: 0.95rem; color: #636e72; background-color: #fff; text-align: center;
+            height: var(--input-height); border: 2px solid #dee2e6; border-radius: 12px; 
+            font-weight: 900; font-size: 1rem; color: #636e72; background-color: #fff; text-align: center;
+            width: 100%; box-sizing: border-box;
         }
-        .mems-section { flex: 0 0 65px; }
-        .bet-section { flex: 0 0 85px; }
-        .init-btns { display: flex; gap: 6px; flex: 1; }
-        .btn-init { flex: 1; height: var(--input-height); border: 2px solid #dee2e6; border-radius: 12px; background: white; font-size: 0.95rem; cursor: pointer; font-weight: bold; color: #636e72; transition: 0.2s; }
+
+        .init-btns { display: flex; gap: 8px; width: 100%; }
+        .btn-init { 
+            flex: 1; height: var(--input-height); border: 2px solid #dee2e6; border-radius: 12px; 
+            background: white; font-size: 0.95rem; cursor: pointer; font-weight: bold; color: #636e72; 
+            white-space: nowrap; /* 줄바꿈 절대 금지 */
+            display: flex; align-items: center; justify-content: center;
+        }
         .btn-init.active-a { background: var(--primary); color: white; border-color: var(--primary); }
         .btn-init.active-b { background: var(--danger); color: white; border-color: var(--danger); }
 
-        /* 보드 레이아웃 */
         .board-wrapper { position: relative; border-radius: 20px; }
         
-        /* 안내 문구 강화 */
         #lockLayer {
             position: absolute; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0, 0, 0, 0.82); border-radius: 20px; z-index: 100;
             display: flex; justify-content: center; align-items: center; backdrop-filter: blur(4px);
-            color: #ffffff; font-weight: 900; font-size: 1.6rem; text-align: center; line-height: 1.4;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.5); letter-spacing: -1px;
+            color: #ffffff; font-weight: 900; font-size: 1.4rem; text-align: center; line-height: 1.5;
+            padding: 20px; box-sizing: border-box;
         }
 
-        .reverse-display { background: #fff0f6; padding: 10px 25px; border-radius: 50px; text-align: center; margin: 0 auto 0.5rem auto; border: 2px solid #ffdeeb; display: table; }
+        .reverse-display { 
+            background: #fff0f6; padding: 10px 20px; border-radius: 50px; text-align: center; 
+            margin: 0 auto 1rem auto; border: 2px solid #ffdeeb; display: table; 
+        }
         .reverse-display b { font-size: 1.1rem; margin-left: 6px; text-decoration: underline; color: #f06595; }
 
         .scoreboard { 
             display: flex; align-items: center; justify-content: space-between; 
-            margin-bottom: 0.4rem; background: #fbfbfb; padding: 1rem 2.5rem; 
+            margin-bottom: 1rem; background: #fbfbfb; padding: 1.5rem 1rem; 
             border-radius: 28px; border: 1px solid #f1f3f5; 
         }
         .team-side { text-align: center; flex: 1; }
-        /* [수정] 점수 글씨 크기 확대 */
-        .large-val { font-size: 2rem; font-weight: 900; color: #495057; }
-        .small-val { font-size: clamp(5rem, 16vw, 9rem); font-weight: 900; line-height: 0.85; margin: 4px 0; }
+        .small-val { font-size: clamp(4.5rem, 18vw, 8.5rem); font-weight: 900; line-height: 0.85; margin: 5px 0; }
         .team-a .small-val { color: var(--primary); }
         .team-b .small-val { color: var(--danger); }
-        .pos-badge { display: inline-block; padding: 3px 12px; border-radius: 10px; font-size: 0.9rem; font-weight: bold; color: white; margin-top: 2px; }
+        .pos-badge { display: inline-block; padding: 3px 12px; border-radius: 10px; font-size: 0.9rem; font-weight: bold; color: white; }
         .bg-atk { background: var(--atk-color); }
         .bg-def { background: var(--def-color); }
 
-        /* 득점 버튼 및 단축키 복구 */
-        .action-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 0.6rem; }
-        .btn-win { height: 95px; border: none; border-radius: 28px; font-size: 1.7rem; font-weight: 900; color: white; cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.12); position: relative; transition: 0.1s; }
-        .btn-win:active { transform: scale(0.95); }
-        .key-hint { position: absolute; top: 8px; left: 12px; font-size: 0.8rem; color: rgba(255,255,255,0.65); font-weight: 900; letter-spacing: 1px; }
+        .action-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1rem; }
+        .btn-win { height: 90px; border: none; border-radius: 24px; font-size: 1.5rem; font-weight: 900; color: white; cursor: pointer; position: relative; }
+        .key-hint { position: absolute; top: 6px; left: 10px; font-size: 0.7rem; color: rgba(255,255,255,0.6); }
         .btn-win-a { background: linear-gradient(135deg, #4dabf7, #228be6); }
         .btn-win-b { background: linear-gradient(135deg, #ff8787, #fa5252); }
 
-        .copy-area { background: #343a40; color: white; padding: 8px; border-radius: 18px; text-align: center; margin-bottom: 0.8rem; cursor: pointer; }
-        .chat-text { font-size: 2.1rem; font-weight: 900; letter-spacing: 4px; line-height: 1; }
+        .copy-area { background: #343a40; color: white; padding: 12px; border-radius: 18px; text-align: center; margin-bottom: 1rem; cursor: pointer; }
+        .chat-text { font-size: 2.2rem; font-weight: 900; letter-spacing: 4px; line-height: 1; }
         
-        .history-title-area { text-align: center; margin-bottom: 6px; }
-        .history-title-area .label-sm { font-size: 1.05rem; color: #495057; display: inline-block; border-bottom: 2.5px solid #eee; padding-bottom: 2px; }
+        .history-title-area { text-align: center; margin-bottom: 8px; }
+        .history-title-area .label-sm { font-size: 1rem; color: #495057; border-bottom: 2px solid #eee; padding-bottom: 2px; }
 
-        /* 히스토리 색상 복구 */
-        .history-container { background: #fff; border: 2px solid #eee; border-radius: 20px; overflow: hidden; margin-bottom: 8px; }
-        .hist-table { width: 100%; border-collapse: collapse; text-align: center; font-size: 0.95rem; table-layout: fixed; }
-        .hist-table th { font-size: 0.85rem; padding: 8px; border-bottom: 2px solid #eee; }
-        .hist-table td { padding: 9px; border-bottom: 1px solid #f8f9fa; font-weight: 800; }
-        .th-a { background: #e7f5ff; color: var(--primary) !important; width: 40%; }
-        .th-b { background: #fff5f5; color: var(--danger) !important; width: 40%; }
-        /* 득점 칸 강조 색상 */
+        .history-container { background: #fff; border: 2px solid #eee; border-radius: 20px; overflow: hidden; margin-bottom: 10px; }
+        .hist-table { width: 100%; border-collapse: collapse; text-align: center; font-size: 0.9rem; table-layout: fixed; }
+        .hist-table th { font-size: 0.8rem; padding: 10px 5px; border-bottom: 2px solid #eee; background: #f8f9fa; }
+        .hist-table td { padding: 12px 5px; border-bottom: 1px solid #f8f9fa; font-weight: 800; }
         .hist-winner-a { color: var(--primary); background-color: #f1f9ff !important; }
         .hist-winner-b { color: var(--danger); background-color: #fff8f8 !important; }
 
-        .btn-more { width: 100%; padding: 10px; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 14px; cursor: pointer; font-size: 0.9rem; font-weight: bold; color: #495057; }
+        .btn-more { width: 100%; padding: 12px; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 14px; cursor: pointer; font-size: 0.9rem; font-weight: bold; color: #495057; }
         .large-history-area { margin-top: 10px; display: none; }
 
-        .settle-section { margin-top: 1rem; padding: 1.2rem; background: #e7f5ff; border-radius: 24px; text-align: center; }
-        .money-text { font-size: 1.8rem; font-weight: 900; color: var(--primary); margin-bottom: 8px; line-height: 1; }
-        .btn-copy-raw { padding: 10px 18px; background: #2b78e4; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .settle-section { margin-top: 1.5rem; padding: 1.5rem; background: #e7f5ff; border-radius: 24px; text-align: center; }
+        .money-text { font-size: 1.8rem; font-weight: 900; color: var(--primary); margin-bottom: 10px; line-height: 1; }
+        .btn-copy-raw { padding: 12px 20px; background: #2b78e4; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; }
 
-        /* 푸터 시그니처 색상 복구 */
-        .footer { margin-top: 2rem; text-align: center; border-top: 1px solid #f1f3f5; padding-top: 1rem; }
-        .btn-reset { background: #f8f9fa; border: 1px solid #dee2e6; color: #adb5bd; padding: 8px 20px; border-radius: 10px; cursor: pointer; font-size: 0.85rem; }
+        .footer { margin-top: 2rem; text-align: center; border-top: 1px solid #f1f3f5; padding-top: 1.5rem; padding-bottom: 1rem; }
+        .btn-reset { background: #f8f9fa; border: 1px solid #dee2e6; color: #adb5bd; padding: 10px 25px; border-radius: 10px; cursor: pointer; font-size: 0.85rem; }
         .signature-bottom { font-size: 0.75rem; color: #dee2e6; font-weight: bold; letter-spacing: 2px; margin-top: 15px; }
 
         #helpModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(5px); }
-        .modal-content { background: white; padding: 2rem; border-radius: 28px; width: 90%; max-width: 450px; position: relative; }
+        .modal-content { background: white; padding: 2rem; border-radius: 28px; width: 85%; max-width: 450px; position: relative; }
         .close-btn { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.8rem; cursor: pointer; color: #adb5bd; }
     </style>
 </head>
@@ -152,16 +173,19 @@
     </div>
 
     <div class="top-settings">
-        <div class="mems-section">
+        <div class="setting-group">
             <span class="label-sm">인원</span>
             <select id="mems" class="select-custom" onchange="render()">
-                <option value="2">2명</option><option value="3">3명</option><option value="4">4명</option><option value="5">5명</option><option value="6">6명</option><option value="7" selected>7명</option>
+                <option value="2">2명</option><option value="3">3명</option><option value="4">4명</option>
+                <option value="5">5명</option><option value="6">6명</option><option value="7" selected>7명</option>
             </select>
         </div>
-        <div class="bet-section">
+        <div class="setting-group">
             <span class="label-sm">인당 패배금</span>
             <select id="betAmount" class="select-custom" onchange="render()">
-                <option value="1">1천만</option><option value="2">2천만</option><option value="3" selected>3천만</option><option value="4">4천만</option><option value="5">5천만</option><option value="6">6천만</option><option value="7">7천만</option><option value="8">8천만</option><option value="9">9천만</option>
+                <option value="1">1천만</option><option value="2">2천만</option><option value="3" selected>3천만</option>
+                <option value="4">4천만</option><option value="5">5천만</option><option value="6">6천만</option>
+                <option value="7">7천만</option><option value="8">8천만</option><option value="9">9천만</option>
             </select>
         </div>
         <div class="init-btns">
@@ -180,14 +204,14 @@
         <div class="scoreboard">
             <div class="team-side team-a">
                 <div style="font-size:0.85rem; font-weight:bold; color:#adb5bd;">큰스</div>
-                <div id="lScoreA" class="large-val">0</div>
+                <div id="lScoreA" style="font-size:1.8rem; font-weight:900; color:#495057;">0</div>
                 <div id="sScoreA" class="small-val">0</div>
                 <div id="badgeA" class="pos-badge">대기</div>
             </div>
-            <div style="font-size: 3rem; color: #eee; font-weight: 900;">:</div>
+            <div style="font-size: 2.5rem; color: #eee; font-weight: 900;">:</div>
             <div class="team-side team-b">
                 <div style="font-size:0.85rem; font-weight:bold; color:#adb5bd;">큰스</div>
-                <div id="lScoreB" class="large-val">0</div>
+                <div id="lScoreB" style="font-size:1.8rem; font-weight:900; color:#495057;">0</div>
                 <div id="sScoreB" class="small-val">0</div>
                 <div id="badgeB" class="pos-badge">대기</div>
             </div>
@@ -195,10 +219,10 @@
 
         <div class="action-btns">
             <button class="btn-win btn-win-a" onclick="addWin('A')">
-                <span class="key-hint">Q / 1</span>우리팀 득점
+                <span class="key-hint">Q/1</span>우리팀 득점
             </button>
             <button class="btn-win btn-win-b" onclick="addWin('B')">
-                <span class="key-hint">E / 2</span>상대팀 득점
+                <span class="key-hint">E/2</span>상대팀 득점
             </button>
         </div>
 
@@ -207,13 +231,13 @@
             <div id="chatDisplay" class="chat-text">00 00</div>
         </div>
 
-        <div class="history-title-area"><span class="label-sm">📊 작스 히스토리 (현재 판)</span></div>
-        <div class="history-container"><table class="hist-table"><thead><tr><th style="width:20%">진행</th><th class="th-a">우리팀</th><th class="th-b">상대팀</th></tr></thead><tbody id="smallHistoryBody"></tbody></table></div>
+        <div class="history-title-area"><span class="label-sm">📊 작스 히스토리</span></div>
+        <div class="history-container"><table class="hist-table"><thead><tr><th style="width:25%">진행</th><th>우리팀</th><th>상대팀</th></tr></thead><tbody id="smallHistoryBody"></tbody></table></div>
 
-        <button class="btn-more" id="moreBtn" onclick="toggleLargeHistory()">큰스 히스토리 더보기 (▼)</button>
+        <button class="btn-more" id="moreBtn" onclick="toggleLargeHistory()">큰스 결과 더보기 (▼)</button>
         <div id="largeHistoryArea" class="large-history-area">
             <div class="history-title-area"><span class="label-sm">📜 큰스 결과 모음</span></div>
-            <div class="history-container"><table class="hist-table"><thead><tr><th style="width:20%">스코어</th><th class="th-a">우리팀</th><th class="th-b">상대팀</th></tr></thead><tbody id="largeHistoryBody"></tbody></table></div>
+            <div class="history-container"><table class="hist-table"><thead><tr><th style="width:25%">스코어</th><th>우리팀</th><th>상대팀</th></tr></thead><tbody id="largeHistoryBody"></tbody></table></div>
         </div>
     </div>
 
@@ -223,17 +247,19 @@
         <button class="btn-copy-raw" onclick="copyRawMoney()">숫자만 복사</button>
     </div>
 
-    <div class="footer"><button class="btn-reset" onclick="resetAll()">데이터 전체 초기화</button><div class="signature-bottom">HABOM DESIGN WORKS</div></div>
+    <div class="footer">
+        <button class="btn-reset" onclick="resetAll()">데이터 전체 초기화</button>
+        <div class="signature-bottom">HABOM DESIGN WORKS</div>
+    </div>
 </div>
 
 <div id="helpModal">
-    <div class="modal-content"><button class="close-btn" onclick="closeHelp()">×</button><h2>📖 사용 방법 안내</h2><ul><li><b>시작:</b> 상단의 '선포팀' 버튼을 눌러 시작하세요.</li><li><b>득점:</b> 버튼 클릭 또는 단축키 사용 (Q/1, E/2).</li><li><b>공유:</b> 검은색 박스 클릭 시 스코어 복사.</li></ul></div>
+    <div class="modal-content"><button class="close-btn" onclick="closeHelp()">×</button><h2>📖 사용 방법</h2><ul><li><b>시작:</b> 상단의 '선포팀' 버튼을 눌러 시작하세요.</li><li><b>득점:</b> 버튼 클릭 또는 단축키 사용 (Q, E).</li><li><b>공유:</b> 스코어 박스 클릭 시 텍스트 복사.</li></ul></div>
 </div>
 
 <script>
     let state = { isStarted: false, initial: 'A', currentSetAttacker: 'A', largeA: 0, largeB: 0, smallA: 0, smallB: 0, roundLogs: [], largeHistory: [], reverseTurn: 'B' };
     
-    // 키보드 단축키
     window.addEventListener('keydown', e => { 
         if (document.activeElement.tagName === 'SELECT' || !state.isStarted) return; 
         const k = e.key.toLowerCase(); 
@@ -269,50 +295,34 @@
 
     function render() {
         if(!state.isStarted) return;
-        document.getElementById('lScoreA').innerText = state.largeA; 
-        document.getElementById('lScoreB').innerText = state.largeB;
-        document.getElementById('sScoreA').innerText = state.smallA; 
-        document.getElementById('sScoreB').innerText = state.smallB;
-
+        document.getElementById('lScoreA').innerText = state.largeA; document.getElementById('lScoreB').innerText = state.largeB;
+        document.getElementById('sScoreA').innerText = state.smallA; document.getElementById('sScoreB').innerText = state.smallB;
         let p = state.smallA + state.smallB, f = (p % 2 !== 0);
         let sA = (state.currentSetAttacker === 'A') ? (f ? '수비' : '공격') : (f ? '공격' : '수비');
         document.getElementById('badgeA').innerText = sA; document.getElementById('badgeA').className = sA === '공격' ? 'pos-badge bg-atk' : 'pos-badge bg-def';
         document.getElementById('badgeB').innerText = (sA === '공격' ? '수비' : '공격'); document.getElementById('badgeB').className = sA === '수비' ? 'pos-badge bg-atk' : 'pos-badge bg-def';
-
         const r = document.getElementById('revTeam'); r.innerText = state.reverseTurn === 'A' ? '우리팀' : '상대팀';
         r.style.color = state.reverseTurn === 'A' ? 'var(--primary)' : 'var(--danger)';
         document.getElementById('chatDisplay').innerText = `${state.largeA}${state.largeB} ${state.smallA}${state.smallB}`;
-
         const m = Math.abs(state.largeA - state.largeB) * document.getElementById('mems').value * (document.getElementById('betAmount').value * 10000000);
         document.getElementById('moneyDisplay').innerText = m.toLocaleString() + "원"; 
         document.getElementById('moneyDisplay').dataset.raw = m;
-
-        // 작스 히스토리 색상 렌더링 복구
         const sb = document.getElementById('smallHistoryBody'); sb.innerHTML = '';
         for(let i=0; i<5; i++) {
             const l = state.roundLogs[i];
-            sb.innerHTML += `<tr>
-                <td>라운드 ${i+1}</td>
-                <td class="${l && l.winner==='A' ? 'hist-winner-a' : ''}">${l && l.winner==='A' ? '['+l.sideA+'] 득점' : '-'}</td>
-                <td class="${l && l.winner==='B' ? 'hist-winner-b' : ''}">${l && l.winner==='B' ? '['+l.sideB+'] 득점' : '-'}</td>
-            </tr>`;
+            sb.innerHTML += `<tr><td>라운드 ${i+1}</td><td class="${l&&l.winner==='A'?'hist-winner-a':''}">${l&&l.winner==='A'?'['+l.sideA+'] 득점':'-'}</td><td class="${l&&l.winner==='B'?'hist-winner-b':''}">${l&&l.winner==='B'?'['+l.sideB+'] 득점':'-'}</td></tr>`;
         }
-
         const lb = document.getElementById('largeHistoryBody'); lb.innerHTML = '';
         if(state.largeHistory.length === 0) lb.innerHTML = '<tr><td colspan="3" style="color:#ced4da; padding:15px;">데이터 없음</td></tr>';
         else state.largeHistory.slice().reverse().forEach(h => {
-            lb.innerHTML += `<tr>
-                <td>스코어 ${h.num}</td>
-                <td class="${h.winner==='A' ? 'hist-winner-a' : ''}">${h.resA}승 ${h.winner==='A' ? '🏆' : ''}</td>
-                <td class="${h.winner==='B' ? 'hist-winner-b' : ''}">${h.resB}승 ${h.winner==='B' ? '🏆' : ''}</td>
-            </tr>`;
+            lb.innerHTML += `<tr><td>스코어 ${h.num}</td><td class="${h.winner==='A'?'hist-winner-a':''}">${h.resA}승 ${h.winner==='A'?'🏆':''}</td><td class="${h.winner==='B'?'hist-winner-b':''}">${h.resB}승 ${h.winner==='B'?'🏆':''}</td></tr>`;
         });
     }
 
     function toggleLargeHistory() {
         const a = document.getElementById('largeHistoryArea'), b = document.getElementById('moreBtn');
         const s = a.style.display === 'block'; a.style.display = s ? 'none' : 'block';
-        b.innerText = s ? '큰스 히스토리 더보기 (▼)' : '히스토리 접기 (▲)';
+        b.innerText = s ? '큰스 결과 더보기 (▼)' : '히스토리 접기 (▲)';
     }
 
     function copyScore() {
@@ -333,9 +343,8 @@
         state = { isStarted: false, initial: 'A', currentSetAttacker: 'A', largeA: 0, largeB: 0, smallA: 0, smallB: 0, roundLogs: [], largeHistory: [], reverseTurn: 'B' };
         document.getElementById('lockLayer').style.display = 'flex'; 
         document.getElementById('largeHistoryArea').style.display = 'none';
-        document.getElementById('moreBtn').innerText = '큰스 히스토리 더보기 (▼)';
-        document.getElementById('initA').className = 'btn-init'; 
-        document.getElementById('initB').className = 'btn-init';
+        document.getElementById('moreBtn').innerText = '큰스 결과 더보기 (▼)';
+        document.getElementById('initA').className = 'btn-init'; document.getElementById('initB').className = 'btn-init';
         render();
     }
 </script>

@@ -41,7 +41,10 @@
             position: relative; box-sizing: border-box;
         }
 
-        @media (max-width: 480px) { .container { padding: 1.5rem 1rem; } }
+        /* 모바일에서 컨테이너 여백을 최소화하여 버튼 면적 확보 */
+        @media (max-width: 480px) { 
+            .container { padding: 1.5rem 0.8rem; } 
+        }
         
         .top-right-btns { position: absolute; top: 1rem; right: 1.5rem; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
         .signature-top { font-size: 0.65rem; color: var(--signature-color); font-weight: bold; letter-spacing: 1px; }
@@ -52,32 +55,24 @@
         }
 
         .page-header { text-align: center; margin-bottom: 1.2rem; padding-bottom: 0.8rem; border-bottom: 2px solid #f1f3f5; }
-        .page-header h1 { font-size: clamp(1.5rem, 5vw, 2.4rem); font-weight: 900; color: var(--text-main); margin: 0; white-space: nowrap; }
+        .page-header h1 { font-size: clamp(1.4rem, 5vw, 2.4rem); font-weight: 900; color: var(--text-main); margin: 0; white-space: nowrap; }
         .sub-title { font-size: 1rem; color: #ff6b6b; font-weight: 700; margin-top: 4px; }
 
-        /* [핵심 수정] 상단 설정 영역 그리드 레이아웃 */
         .top-settings { 
             display: grid; 
-            grid-template-columns: 80px 110px 1fr 1fr; /* PC: 인원/패배금 고정 후 버튼 2개가 나머지 균등 배분 */
+            grid-template-columns: 80px 110px 1fr 1fr; 
             gap: 10px; 
             align-items: flex-end;
             margin-bottom: 1.5rem; 
             position: relative; z-index: 101; 
         }
 
-        /* 모바일용 레이아웃 전환 */
         @media (max-width: 600px) {
-            .top-settings {
-                grid-template-columns: 1fr 1fr; /* 2x2 형태 */
-            }
-            .init-btns-wrapper {
-                grid-column: span 2;
-                display: flex;
-                gap: 8px;
-            }
+            .top-settings { grid-template-columns: 1fr 1fr; }
+            .init-btns-wrapper { grid-column: span 2; display: flex; gap: 8px; }
         }
 
-        .setting-group { display: flex; flex-direction: column; gap: 6px; }
+        .setting-group { display: flex; flex-direction: column; gap: 4px; }
         .label-sm { font-size: 0.75rem; font-weight: bold; color: #868e96; text-transform: uppercase; white-space: nowrap; }
         
         .select-custom { 
@@ -88,13 +83,11 @@
 
         .btn-init { 
             height: var(--input-height); border: 2px solid #dee2e6; border-radius: 12px; 
-            background: white; font-size: 1rem; cursor: pointer; font-weight: bold; color: #636e72; 
+            background: white; font-size: 0.95rem; cursor: pointer; font-weight: bold; color: #636e72; 
             white-space: nowrap; display: flex; align-items: center; justify-content: center; width: 100%;
         }
-        .btn-init.active-a { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 10px rgba(43,120,228,0.15); }
-        .btn-init.active-b { background: var(--danger); color: white; border-color: var(--danger); box-shadow: 0 4px 10px rgba(230,57,70,0.15); }
-
-        /* [추가] 모바일 대응용 버튼 그룹 */
+        .btn-init.active-a { background: var(--primary); color: white; border-color: var(--primary); }
+        .btn-init.active-b { background: var(--danger); color: white; border-color: var(--danger); }
         .init-btns-wrapper { display: contents; } 
 
         .board-wrapper { position: relative; border-radius: 20px; }
@@ -103,8 +96,8 @@
             position: absolute; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0, 0, 0, 0.85); border-radius: 24px; z-index: 100;
             display: flex; justify-content: center; align-items: center; backdrop-filter: blur(5px);
-            color: #ffffff; font-weight: 900; font-size: clamp(1.3rem, 4vw, 1.8rem); text-align: center; line-height: 1.5;
-            text-shadow: 0 2px 15px rgba(0,0,0,0.8); pointer-events: auto;
+            color: #ffffff; font-weight: 900; font-size: clamp(1.2rem, 4vw, 1.8rem); text-align: center; line-height: 1.5;
+            text-shadow: 0 2px 15px rgba(0,0,0,0.8);
         }
 
         .reverse-display { 
@@ -115,26 +108,35 @@
 
         .scoreboard { 
             display: flex; align-items: center; justify-content: space-between; 
-            margin-bottom: 0.6rem; background: #fbfbfb; padding: 1.5rem 2.5rem; 
+            margin-bottom: 0.6rem; background: #fbfbfb; padding: 1.5rem 2rem; 
             border-radius: 28px; border: 1px solid #f1f3f5; 
         }
         .team-side { text-align: center; flex: 1; }
-        /* 점수 숫자 강조 */
-        .small-val { font-size: clamp(5rem, 16vw, 9rem); font-weight: 900; line-height: 0.85; margin: 6px 0; }
+        .small-val { font-size: clamp(4.5rem, 16vw, 9rem); font-weight: 900; line-height: 0.85; margin: 6px 0; }
         .team-a .small-val { color: var(--primary); }
         .team-b .small-val { color: var(--danger); }
         .pos-badge { display: inline-block; padding: 4px 14px; border-radius: 12px; font-size: 1rem; font-weight: bold; color: white; margin-top: 4px; }
         .bg-atk { background: var(--atk-color); }
         .bg-def { background: var(--def-color); }
 
-        .action-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1rem; }
-        .btn-win { height: 105px; border: none; border-radius: 28px; font-size: 1.8rem; font-weight: 900; color: white; cursor: pointer; position: relative; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-        .key-hint { position: absolute; top: 8px; left: 15px; font-size: 0.8rem; color: rgba(255,255,255,0.6); }
+        /* [수정] 득점 버튼 글자 안깨지도록 최적화 */
+        .action-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1rem; }
+        .btn-win { 
+            height: 100px; border: none; border-radius: 28px; 
+            font-size: clamp(1.3rem, 4vw, 1.8rem); /* 모바일 너비에 맞춰 자동 축소 */
+            font-weight: 900; color: white; cursor: pointer; position: relative; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1); 
+            white-space: nowrap; /* 줄바꿈 원천 차단 */
+            letter-spacing: -0.5px; /* 공간 확보를 위해 자간 축소 */
+            display: flex; align-items: center; justify-content: center;
+        }
+        .btn-win:active { transform: scale(0.96); }
+        .key-hint { position: absolute; top: 8px; left: 15px; font-size: 0.75rem; color: rgba(255,255,255,0.6); }
         .btn-win-a { background: linear-gradient(135deg, #4dabf7, #228be6); }
         .btn-win-b { background: linear-gradient(135deg, #ff8787, #fa5252); }
 
         .copy-area { background: #343a40; color: white; padding: 12px; border-radius: 18px; text-align: center; margin-bottom: 1.5rem; cursor: pointer; }
-        .chat-text { font-size: 2.4rem; font-weight: 900; letter-spacing: 5px; line-height: 1; }
+        .chat-text { font-size: 2.3rem; font-weight: 900; letter-spacing: 5px; line-height: 1; }
         
         .history-title-area { text-align: center; margin-bottom: 10px; }
         .history-title-area .label-sm { font-size: 1.1rem; color: #495057; border-bottom: 2.5px solid #eee; padding-bottom: 4px; }
@@ -150,7 +152,7 @@
         .large-history-area { margin-top: 15px; display: none; }
 
         .settle-section { margin-top: 1.5rem; padding: 1.8rem; background: #e7f5ff; border-radius: 28px; text-align: center; }
-        .money-text { font-size: 2.2rem; font-weight: 900; color: var(--primary); margin-bottom: 12px; line-height: 1; }
+        .money-text { font-size: 2rem; font-weight: 900; color: var(--primary); margin-bottom: 12px; line-height: 1; }
         .btn-copy-raw { padding: 12px 25px; background: #2b78e4; color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem; width: 100%; max-width: 300px; }
 
         .footer { margin-top: 2.5rem; text-align: center; border-top: 1px solid #f1f3f5; padding-top: 1.5rem; }
@@ -272,30 +274,8 @@
 
     function openHelp() { document.getElementById('helpModal').style.display = 'flex'; }
     function closeHelp() { document.getElementById('helpModal').style.display = 'none'; }
-
-    function setInitial(t) { 
-        state.isStarted = true; state.initial = t; state.currentSetAttacker = t; state.reverseTurn = (t === 'A') ? 'B' : 'A'; 
-        document.getElementById('lockLayer').style.display = 'none'; 
-        document.getElementById('initA').className = t === 'A' ? 'btn-init active-a' : 'btn-init'; 
-        document.getElementById('initB').className = t === 'B' ? 'btn-init active-b' : 'btn-init'; 
-        render(); 
-    }
-
-    function addWin(t) {
-        if(!state.isStarted) return;
-        let p = state.smallA + state.smallB, f = (p % 2 !== 0);
-        let sA = (state.currentSetAttacker === 'A') ? (f ? '수비' : '공격') : (f ? '공격' : '수비');
-        state.roundLogs.push({ winner: t, sideA: sA, sideB: (sA === '공격' ? '수비' : '공격') });
-        if(t === 'A') state.smallA++; else state.smallB++;
-        if(state.smallA === 3 || state.smallB === 3) {
-            state.largeHistory.push({ num: state.largeA + state.largeB + 1, resA: state.smallA, resB: state.smallB, winner: t });
-            if(t === 'A') state.largeA++; else state.largeB++;
-            state.currentSetAttacker = state.reverseTurn; state.reverseTurn = (state.reverseTurn === 'A') ? 'B' : 'A';
-            state.smallA = 0; state.smallB = 0; state.roundLogs = [];
-        }
-        render();
-    }
-
+    function setInitial(t) { state.isStarted = true; state.initial = t; state.currentSetAttacker = t; state.reverseTurn = (t === 'A') ? 'B' : 'A'; document.getElementById('lockLayer').style.display = 'none'; document.getElementById('initA').className = t === 'A' ? 'btn-init active-a' : 'btn-init'; document.getElementById('initB').className = t === 'B' ? 'btn-init active-b' : 'btn-init'; render(); }
+    function addWin(t) { if(!state.isStarted) return; let p = state.smallA + state.smallB, f = (p % 2 !== 0); let sA = (state.currentSetAttacker === 'A') ? (f ? '수비' : '공격') : (f ? '공격' : '수비'); state.roundLogs.push({ winner: t, sideA: sA, sideB: (sA === '공격' ? '수비' : '공격') }); if(t === 'A') state.smallA++; else state.smallB++; if(state.smallA === 3 || state.smallB === 3) { state.largeHistory.push({ num: state.largeA + state.largeB + 1, resA: state.smallA, resB: state.smallB, winner: t }); if(t === 'A') state.largeA++; else state.largeB++; state.currentSetAttacker = state.reverseTurn; state.reverseTurn = (state.reverseTurn === 'A') ? 'B' : 'A'; state.smallA = 0; state.smallB = 0; state.roundLogs = []; } render(); }
     function render() {
         if(!state.isStarted) return;
         document.getElementById('lScoreA').innerText = state.largeA; document.getElementById('lScoreB').innerText = state.largeB;
@@ -308,8 +288,7 @@
         r.style.color = state.reverseTurn === 'A' ? 'var(--primary)' : 'var(--danger)';
         document.getElementById('chatDisplay').innerText = `${state.largeA}${state.largeB} ${state.smallA}${state.smallB}`;
         const m = Math.abs(state.largeA - state.largeB) * document.getElementById('mems').value * (document.getElementById('betAmount').value * 10000000);
-        document.getElementById('moneyDisplay').innerText = m.toLocaleString() + "원"; 
-        document.getElementById('moneyDisplay').dataset.raw = m;
+        document.getElementById('moneyDisplay').innerText = m.toLocaleString() + "원"; document.getElementById('moneyDisplay').dataset.raw = m;
         const sb = document.getElementById('smallHistoryBody'); sb.innerHTML = '';
         for(let i=0; i<5; i++) {
             const l = state.roundLogs[i];
@@ -318,38 +297,13 @@
         const lb = document.getElementById('largeHistoryBody'); lb.innerHTML = '';
         if(state.largeHistory.length === 0) lb.innerHTML = '<tr><td colspan="3" style="color:#ced4da; padding:15px;">데이터 없음</td></tr>';
         else state.largeHistory.slice().reverse().forEach(h => {
-            lb.innerHTML += `<tr><td>스코어 ${h.num}</td><td class="${h.winner==='A'?'hist-winner-a':''}">${h.resA}승 ${h.winner==='A'?'🏆':''}</td><td class="${h.winner==='B'?'hist-winner-b':''}">${h.resB}승 ${h.winner==='B'?'🏆':''}</td></tr>`;
+            lb.innerHTML += `<tr><td>스코어 ${h.num}</td><td class="${h.winner==='A'?'hist-winner-a':''}">${h.resA}승 ${h.winner==='A' ? '🏆' : ''}</td><td class="${h.winner==='B'?'hist-winner-b':''}">${h.resB}승 ${h.winner==='B' ? '🏆' : ''}</td></tr>`;
         });
     }
-
-    function toggleLargeHistory() {
-        const a = document.getElementById('largeHistoryArea'), b = document.getElementById('moreBtn');
-        const s = a.style.display === 'block'; a.style.display = s ? 'none' : 'block';
-        b.innerText = s ? '큰스 결과 더보기 (▼)' : '히스토리 접기 (▲)';
-    }
-
-    function copyScore() {
-        const t = document.getElementById('chatDisplay').innerText;
-        navigator.clipboard.writeText(t).then(() => {
-            const a = document.querySelector('.copy-area'); a.style.background = '#40c057';
-            setTimeout(() => a.style.background = '#343a40', 300);
-        });
-    }
-
-    function copyRawMoney() {
-        const r = document.getElementById('moneyDisplay').dataset.raw || "0";
-        navigator.clipboard.writeText(r).then(() => alert("숫자만 복사되었습니다: " + r));
-    }
-
-    function resetAll() {
-        if(!confirm("모든 데이터를 초기화하시겠습니까?")) return;
-        state = { isStarted: false, initial: 'A', currentSetAttacker: 'A', largeA: 0, largeB: 0, smallA: 0, smallB: 0, roundLogs: [], largeHistory: [], reverseTurn: 'B' };
-        document.getElementById('lockLayer').style.display = 'flex'; 
-        document.getElementById('largeHistoryArea').style.display = 'none';
-        document.getElementById('moreBtn').innerText = '큰스 결과 더보기 (▼)';
-        document.getElementById('initA').className = 'btn-init'; document.getElementById('initB').className = 'btn-init';
-        render();
-    }
+    function toggleLargeHistory() { const a = document.getElementById('largeHistoryArea'), b = document.getElementById('moreBtn'); const s = a.style.display === 'block'; a.style.display = s ? 'none' : 'block'; b.innerText = s ? '큰스 결과 더보기 (▼)' : '히스토리 접기 (▲)'; }
+    function copyScore() { const t = document.getElementById('chatDisplay').innerText; navigator.clipboard.writeText(t).then(() => { const a = document.querySelector('.copy-area'); a.style.background = '#40c057'; setTimeout(() => a.style.background = '#343a40', 300); }); }
+    function copyRawMoney() { const r = document.getElementById('moneyDisplay').dataset.raw || "0"; navigator.clipboard.writeText(r).then(() => alert("숫자만 복사되었습니다: " + r)); }
+    function resetAll() { if(!confirm("모든 데이터를 초기화하시겠습니까?")) return; state = { isStarted: false, initial: 'A', currentSetAttacker: 'A', largeA: 0, largeB: 0, smallA: 0, smallB: 0, roundLogs: [], largeHistory: [], reverseTurn: 'B' }; document.getElementById('lockLayer').style.display = 'flex'; document.getElementById('largeHistoryArea').style.display = 'none'; document.getElementById('moreBtn').innerText = '큰스 결과 더보기 (▼)'; document.getElementById('initA').className = 'btn-init'; document.getElementById('initB').className = 'btn-init'; render(); }
 </script>
 </body>
 </html>

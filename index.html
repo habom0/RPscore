@@ -121,6 +121,7 @@
         .res-num { font-size: 5rem; font-weight: 800; color: var(--primary); margin: 0.5rem 0; line-height: 1; }
         .preview-box { background: #f2f4f6; padding: 1.2rem; border-radius: 1.2rem; margin: 1.5rem 0; font-weight: 700; color: var(--toss-text-sub); line-height: 1.6; }
         .copy-btn { width: 100%; height: 65px; background: var(--primary); color: white; border: none; border-radius: 1.2rem; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .copy-btn-reason { width: 100%; height: 65px; background: #6b7684; color: white; border: none; border-radius: 1.2rem; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: 0.2s; margin-top: 12px; }
 
         /* --- [탭 2] 스코어보드 스타일 --- */
         .persistent-settings { background: #f9fafb; border-radius: 1.5rem; padding: 1.2rem 1.8rem; margin-bottom: 1.5rem; }
@@ -404,6 +405,7 @@
                 <div class="res-num" id="final-num">0</div>
                 <div class="preview-box" id="preview-text">-</div>
                 <button class="copy-btn" onclick="copyResult()">📋 대응가능 현황 복사하기</button>
+                <button class="copy-btn-reason" onclick="copyShortReason()">❌ 인원부족 사유 복사하기</button>
             </div>
         </div>
 
@@ -591,6 +593,31 @@
         });
     }
 
+    // 인원부족 사유 복사 기능 (총원/대응가능 제외)
+    function copyShortReason() {
+        const total = parseInt(calcValues.total);
+        const afk = parseInt(calcValues.afk);
+        const sales = parseInt(calcValues.sales);
+        const gcCount = calcParties.filter(p => p.type === 'GC' && (p.count === 6 || p.count === 7)).length;
+        const gdCount = calcParties.filter(p => p.type === 'GC' && (p.count >= 2 && p.count <= 4)).length;
+        const gechaSum = calcParties.filter(p => p.type === 'GE').reduce((a, b) => a + b.count, 0);
+
+        const parts = [];
+        if (afk > 0) parts.push(`잠수 ${afk}명`);
+        if (gcCount > 0) parts.push(`지씨 ${gcCount}`);
+        if (gdCount > 0) parts.push(`지디 ${gdCount}`);
+        if (gechaSum > 0) parts.push(`게차 ${gechaSum}명`);
+        if (sales > 0) parts.push(`판매직 ${sales}명`);
+
+        const text = parts.length > 0 ? parts.join(' / ') : "인원부족 사유 없음";
+        
+        navigator.clipboard.writeText(text).then(() => {
+            const b = document.querySelector('.copy-btn-reason');
+            const old = b.innerText; b.innerText = "✅ 사유 복사 완료";
+            setTimeout(() => b.innerText = old, 1500);
+        });
+    }
+
     /* --- [스코어보드 로직] --- */
     let sbState = { isStarted: false, initial: 'A', currentSetAttacker: 'A', largeA: 0, largeB: 0, smallA: 0, smallB: 0, roundLogs: [], reverseTurn: 'B' };
 
@@ -631,8 +658,11 @@
         let sA = (sbState.currentSetAttacker === 'A') ? (f ? '수비' : '공격') : (f ? '공격' : '수비');
         
         const bA = document.getElementById('badgeA'); const bB = document.getElementById('badgeB');
-        bA.innerText = sA; bA.className = sA === '공격' ? 'pos-badge bg-atk' : 'pos-badge bg-def';
-        bB.innerText = (sA === '공격' ? '수비' : '공격'); bB.className = sA === '수비' ? 'pos-badge bg-atk' : 'pos-badge bg-def';
+        bA.innerText = sA; bA.className = sA === '공격' ? 'pos-badge bg-atk' : 'pos-badge bg-atk'; // logic fix needed or keep same?
+        // 기존 스타일 유지 (공격-atk, 수비-def)
+        bA.className = sA === '공격' ? 'pos-badge bg-atk' : 'pos-badge bg-def';
+        bB.innerText = (sA === '공격' ? '수비' : '공격'); 
+        bB.className = sA === '수비' ? 'pos-badge bg-atk' : 'pos-badge bg-def';
 
         document.getElementById('revTeam').innerText = sbState.reverseTurn === 'A' ? '우리팀' : '상대팀';
         document.getElementById('chatDisplay').innerText = `${sbState.largeA}${sbState.largeB} ${sbState.smallA}${sbState.smallB}`;
@@ -664,4 +694,3 @@
 
 </body>
 </html>
-

@@ -268,7 +268,6 @@
 
         <div id="setup-screen" style="text-align:center; padding: 3rem 0; flex: 1; display: flex; flex-direction: column; justify-content: center;">
             <span style="font-size: 1.2rem; font-weight: 800; color: var(--toss-text-main); margin-bottom: 2rem; display: block;">게임을 시작할 선포팀을 선택하세요</span>
-            <!-- 선포 버튼 가로 길이 조정 -->
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; width: 100%; max-width: 500px; margin: 0 auto;">
                 <button style="height:120px; border:none; border-radius:2rem; background:var(--primary); color:white; font-size:1.4rem; font-weight:900; cursor:pointer; box-shadow: 0 4px 15px rgba(49, 130, 246, 0.2);" onclick="setInitial('A')">우리팀 선포</button>
                 <button style="height:120px; border:none; border-radius:2rem; background:var(--danger); color:white; font-size:1.4rem; font-weight:900; cursor:pointer; box-shadow: 0 4px 15px rgba(240, 68, 82, 0.2);" onclick="setInitial('B')">상대팀 선포</button>
@@ -568,7 +567,18 @@
         
         const gcCount = calcParties.filter(p => p.type === 'GC' && (p.count === 6 || p.count === 7)).length;
         const gdCount = calcParties.filter(p => p.type === 'GC' && (p.count >= 2 && p.count <= 4)).length;
-        const text = `총원 ${netActive}명 / 지씨 ${gcCount} / 지디 ${gdCount} / 게차 ${gechaSum}명 / 판매직 ${sales}명 / 대응가능 ${final}명`;
+        
+        // 현황 텍스트 생성 (0명 제외 및 잠수 인원 포함)
+        const parts = [];
+        parts.push(`총원 ${total}명`);
+        if (afk > 0) parts.push(`잠수 ${afk}명`);
+        if (gcCount > 0) parts.push(`지씨 ${gcCount}`);
+        if (gdCount > 0) parts.push(`지디 ${gdCount}`);
+        if (gechaSum > 0) parts.push(`게차 ${gechaSum}명`);
+        if (sales > 0) parts.push(`판매직 ${sales}명`);
+        parts.push(`대응가능 ${final}명`);
+        
+        const text = parts.join(' / ');
         document.getElementById('preview-text').innerText = text;
     }
 

@@ -3,9 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RP 통합 매니저 - HABOM</title>
+    
+    <!-- 제목 및 검색/공유 설정 -->
+    <title>RP 통합 매니저</title>
+    <meta name="description" content="당신도 이제 라운드걸 ✨ 찡긋- 😉💕">
+    <meta property="og:title" content="RP 통합 매니저">
+    <meta property="og:description" content="당신도 이제 라운드걸 ✨ 찡긋- 😉💕">
+    <meta property="og:type" content="website">
+
+    <!-- 파비콘 (⚔️ 이모지 적용) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚔️</text></svg>">
+    
     <!-- Pretendard 폰트 불러오기 -->
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+    
     <style>
         :root { 
             --primary: #3182f6;    /* Toss Blue */
@@ -36,7 +47,7 @@
             padding-bottom: var(--nav-height); 
         }
 
-        /* 공통 컨테이너 - 화면을 가득 채우도록 min-height 설정 */
+        /* 공통 컨테이너 - 화면을 가득 채우도록 설정 */
         .app-container { 
             width: 100%; 
             max-width: 760px; 
@@ -55,7 +66,7 @@
         header .sub-title { font-size: 0.9rem; color: var(--danger); font-weight: 700; margin-top: 6px; display: block; }
 
         .help-icon {
-            position: absolute; top: 0; right: 0; width: 28px; height: 28px;
+            position: absolute; top: 0; right: 0; width: 30px; height: 30px;
             background: none; color: var(--toss-text-desc); border: 2.2px solid #e5e8eb;
             border-radius: 50%; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;
         }
@@ -113,7 +124,6 @@
 
         /* --- [탭 2] 스코어보드 스타일 --- */
         .persistent-settings { background: #f9fafb; border-radius: 1.5rem; padding: 1.2rem 1.8rem; margin-bottom: 1.5rem; }
-        /* 레이아웃 비율 조정: 인원(0.8) 패배금(0.8) 선포팀(1.4) */
         .settings-row { display: grid; grid-template-columns: 0.8fr 0.8fr 1.4fr; gap: 12px; align-items: flex-end; }
         .setting-item { display: flex; flex-direction: column; gap: 6px; }
         .label-sm { font-size: 0.8rem; font-weight: 700; color: var(--toss-text-desc); }
@@ -140,15 +150,12 @@
         .btn-win-b { background: var(--danger); }
         .btn-win:active { transform: scale(0.96); }
 
-        /* 채팅 스코어 복사 바 세로 너비 축소 */
         .copy-bar { background: var(--toss-text-main); color: white; padding: 0.6rem 1.8rem; border-radius: 1.2rem; text-align: center; margin-bottom: 1.2rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         .chat-val { font-size: 1.8rem; font-weight: 900; letter-spacing: 4px; }
         
-        /* 스코어보드 테이블 레이아웃 고정 */
         .h-table { width: 100%; border-collapse: collapse; text-align: center; font-size: 1.05rem; table-layout: fixed; }
         .h-table th { padding: 14px 5px; color: var(--toss-text-sub); font-size: 1rem; border-bottom: 2px solid #e5e8eb; }
         .h-table td { padding: 14px 5px; font-weight: 800; border-bottom: 1px solid #eff2f5; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-        /* 열 너비 강제 고정 (합계 100%) */
         .h-table th:nth-child(1) { width: 25%; }
         .h-table th:nth-child(2) { width: 37.5%; }
         .h-table th:nth-child(3) { width: 37.5%; }
@@ -160,7 +167,14 @@
         .money-val { font-size: 1.4rem; font-weight: 900; color: var(--primary); }
         .btn-copy-num { padding: 12px 22px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; }
 
-        /* 하단 네비게이션 - 화면 하단 부착 토스 스타일 */
+        /* 도움말 모달 스타일 */
+        #modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 1100; backdrop-filter: blur(4px); }
+        .help-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 2.5rem 2rem; border-radius: 2rem; z-index: 1200; width: 85%; max-width: 360px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+        .help-modal h3 { margin: 0 0 1.2rem 0; font-weight: 800; text-align: center; font-size: 1.2rem; }
+        .help-modal p { font-size: 0.95rem; color: var(--toss-text-sub); line-height: 1.7; margin-bottom: 2rem; word-break: keep-all; }
+        .help-modal .btn-close { width: 100%; padding: 1rem; border: none; background: var(--primary); color: white; border-radius: 1rem; font-weight: 700; cursor: pointer; font-size: 1rem; }
+
+        /* 하단 네비게이션 */
         .bottom-nav {
             position: fixed; 
             bottom: 0; 
@@ -196,10 +210,10 @@
         .nav-item.active span { color: var(--primary); }
         .nav-item:active { background: rgba(0,0,0,0.02); }
 
-        /* 푸터 시그니처 - 박스 최하단 고정 */
+        /* 푸터 시그니처 */
         footer { 
             margin-top: auto; 
-            padding: 3rem 0 1rem 0; 
+            padding: 3rem 0 1.5rem 0; 
             text-align: center; 
             opacity: 0.6; 
         }
@@ -214,9 +228,9 @@
             .res-num { font-size: 3.5rem; }
             .numpad { gap: 10px; }
             .key { height: 65px; border-radius: 1rem; }
-            /* 모바일에서 설정창 한 번 더 최적화 */
             .settings-row { grid-template-columns: 1fr 1fr; }
             .setting-item:last-child { grid-column: span 2; margin-top: 10px; }
+            .btn-win { height: 85px; font-size: 1.2rem; }
         }
     </style>
 </head>
@@ -224,12 +238,12 @@
 
 <div class="app-container">
     
-    <!-- [탭 1] 스코어보드 섹션 (기존 active 탭) -->
+    <!-- [탭 1] 스코어보드 섹션 -->
     <div id="tab-scoreboard" class="tab-content active">
         <header>
             <h1>⚔️ 지상 RP 스코어보드 ⚔️</h1>
             <span class="sub-title">당신도 이제 라운드걸 ✨ 찡긋- 😉💕</span>
-            <button class="help-icon" onclick="alert('Q/1: 우리팀 득점\nE/2: 상대팀 득점')">?</button>
+            <button class="help-icon" onclick="openHelp('scoreboard')">?</button>
         </header>
 
         <div class="persistent-settings">
@@ -252,11 +266,12 @@
             </div>
         </div>
 
-        <div id="setup-screen" style="text-align:center; padding: 3rem 0;">
+        <div id="setup-screen" style="text-align:center; padding: 3rem 0; flex: 1; display: flex; flex-direction: column; justify-content: center;">
             <span style="font-size: 1.2rem; font-weight: 800; color: var(--toss-text-main); margin-bottom: 2rem; display: block;">게임을 시작할 선포팀을 선택하세요</span>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; max-width:400px; margin:0 auto;">
-                <button style="height:100px; border:none; border-radius:1.8rem; background:var(--primary); color:white; font-size:1.3rem; font-weight:900; cursor:pointer;" onclick="setInitial('A')">우리팀 선포</button>
-                <button style="height:100px; border:none; border-radius:1.8rem; background:var(--danger); color:white; font-size:1.3rem; font-weight:900; cursor:pointer;" onclick="setInitial('B')">상대팀 선포</button>
+            <!-- 선포 버튼 가로 길이 조정 -->
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; width: 100%; max-width: 500px; margin: 0 auto;">
+                <button style="height:120px; border:none; border-radius:2rem; background:var(--primary); color:white; font-size:1.4rem; font-weight:900; cursor:pointer; box-shadow: 0 4px 15px rgba(49, 130, 246, 0.2);" onclick="setInitial('A')">우리팀 선포</button>
+                <button style="height:120px; border:none; border-radius:2rem; background:var(--danger); color:white; font-size:1.4rem; font-weight:900; cursor:pointer; box-shadow: 0 4px 15px rgba(240, 68, 82, 0.2);" onclick="setInitial('B')">상대팀 선포</button>
             </div>
         </div>
 
@@ -319,7 +334,7 @@
         <header>
             <h1>👥 RP인원 계산기 👥</h1>
             <span class="sub-title">✨ RP 할래말래? 할래말래? 🤷‍♂️</span>
-            <button class="help-icon" onclick="toggleHelp(true)">?</button>
+            <button class="help-icon" onclick="openHelp('calculator')">?</button>
         </header>
 
         <div class="summary-box">
@@ -401,7 +416,15 @@
     </div>
 </div>
 
-<!-- 하단 네비게이션 - 이모지 적용 및 토스 스타일 탭 -->
+<!-- 도움말 모달 구조 -->
+<div id="modal-overlay" onclick="closeHelp()"></div>
+<div id="help-modal" class="help-modal">
+    <h3 id="help-title">도움말</h3>
+    <p id="help-desc"></p>
+    <button class="btn-close" onclick="closeHelp()">확인</button>
+</div>
+
+<!-- 하단 네비게이션 -->
 <nav class="bottom-nav">
     <div class="nav-item active" id="nav-scoreboard" onclick="switchTab('scoreboard', this)">
         <div class="emoji-icon">⚔️</div>
@@ -430,14 +453,35 @@
         window.scrollTo(0,0);
     }
 
-    /* 전역 키보드 이벤트 리스너 통합 (인원 계산기 숫자키 입력 복구) */
+    /* 도움말 시스템 */
+    function openHelp(type) {
+        const title = document.getElementById('help-title');
+        const desc = document.getElementById('help-desc');
+        
+        if (type === 'calculator') {
+            title.innerText = "👥 인원 계산기 사용법";
+            desc.innerHTML = "1. <b>전체/잠수/판매직</b> 인원을 순서대로 입력하세요.<br>2. 현재 진행 중인 <b>지상/게차 파티</b>를 선택하여 추가하세요.<br>3. 남은 <b>대응 가능 가용 인원</b>이 실시간으로 계산됩니다.";
+        } else {
+            title.innerText = "⚔️ 스코어보드 사용법";
+            desc.innerHTML = "1. 선포한 팀을 선택해 게임을 시작하세요.<br>2. <b>단축키 Q(1)</b>: 우리팀 득점 / <b>E(2)</b>: 상대팀 득점.<br>3. 3선승 시 한 세트(큰스)가 올라가며 공격/수비 역선포 순서가 자동 계산됩니다.";
+        }
+        
+        document.getElementById('modal-overlay').style.display = 'block';
+        document.getElementById('help-modal').style.display = 'block';
+    }
+
+    function closeHelp() {
+        document.getElementById('modal-overlay').style.display = 'none';
+        document.getElementById('help-modal').style.display = 'none';
+    }
+
+    /* 전역 키보드 이벤트 리스너 통합 */
     window.addEventListener('keydown', e => { 
         if (document.activeElement.tagName === 'SELECT' || document.activeElement.tagName === 'INPUT') return; 
         
         const isCalcActive = document.getElementById('tab-calculator').classList.contains('active');
         const isBoardActive = document.getElementById('tab-scoreboard').classList.contains('active');
 
-        // 1. 계산기 활성화 상태일 때 숫자 키패드 입력 처리
         if (isCalcActive) {
             if (e.key >= '0' && e.key <= '9') {
                 e.preventDefault();
@@ -451,7 +495,6 @@
             }
         }
 
-        // 2. 스코어보드 활성화 상태일 때 득점 단축키 처리
         if (isBoardActive && sbState.isStarted) {
             const k = e.key.toLowerCase(); 
             if (k === 'q' || k === '1') addWin('A'); 
@@ -605,10 +648,6 @@
     }
 
     function copyRawMoney() { navigator.clipboard.writeText(document.getElementById('moneyDisplay').dataset.raw || "0"); }
-
-    function toggleHelp(show) {
-        if(show) alert("전체/잠수/판매직 인원을 순서대로 입력하세요.\n이후 지상/게차 파티를 추가하면 실시간으로 가용 인원이 계산됩니다.");
-    }
 
     document.getElementById('ind-1').classList.add('active');
 </script>

@@ -547,6 +547,24 @@
     function addParty(type, count) { calcParties.push({type, count}); calculateRP(); }
     function removeParty(idx) { calcParties.splice(idx, 1); calculateRP(); }
 
+    // 파티 정보 그룹화 및 문자열 생성 함수
+    function getDetailedPartyString() {
+        const stats = {};
+        calcParties.forEach(p => {
+            let label = '';
+            let groupKey = '';
+            if (p.type === 'GC') {
+                label = p.count >= 6 ? '지씨' : '지디';
+                groupKey = `${label}(${p.count}${p.count})`;
+            } else {
+                label = '게차';
+                groupKey = `${label}(${p.count})`;
+            }
+            stats[groupKey] = (stats[groupKey] || 0) + 1;
+        });
+        return Object.entries(stats).map(([key, count]) => `${key}${count}`);
+    }
+
     function calculateRP() {
         const total = parseInt(calcValues.total);
         const afk = parseInt(calcValues.afk);
@@ -567,21 +585,16 @@
             }).join('');
         }
         
-        const gcCount = calcParties.filter(p => p.type === 'GC' && (p.count === 6 || p.count === 7)).length;
-        const gdCount = calcParties.filter(p => p.type === 'GC' && (p.count >= 2 && p.count <= 4)).length;
-        
-        // 현황 텍스트 생성 (0명 제외 및 잠수 인원 포함)
+        // 상세 현황 텍스트 조합
+        const partyStrings = getDetailedPartyString();
         const parts = [];
         parts.push(`총원 ${total}명`);
         if (afk > 0) parts.push(`잠수 ${afk}명`);
-        if (gcCount > 0) parts.push(`지씨 ${gcCount}`);
-        if (gdCount > 0) parts.push(`지디 ${gdCount}`);
-        if (gechaSum > 0) parts.push(`게차 ${gechaSum}명`);
+        if (partyStrings.length > 0) parts.push(...partyStrings);
         if (sales > 0) parts.push(`판매직 ${sales}명`);
         parts.push(`대응가능 ${final}명`);
         
-        const text = parts.join(' / ');
-        document.getElementById('preview-text').innerText = text;
+        document.getElementById('preview-text').innerText = parts.join(' / ');
     }
 
     function copyResult() {
@@ -595,18 +608,13 @@
 
     // 인원부족 사유 복사 기능 (총원/대응가능 제외)
     function copyShortReason() {
-        const total = parseInt(calcValues.total);
         const afk = parseInt(calcValues.afk);
         const sales = parseInt(calcValues.sales);
-        const gcCount = calcParties.filter(p => p.type === 'GC' && (p.count === 6 || p.count === 7)).length;
-        const gdCount = calcParties.filter(p => p.type === 'GC' && (p.count >= 2 && p.count <= 4)).length;
-        const gechaSum = calcParties.filter(p => p.type === 'GE').reduce((a, b) => a + b.count, 0);
+        const partyStrings = getDetailedPartyString();
 
         const parts = [];
         if (afk > 0) parts.push(`잠수 ${afk}명`);
-        if (gcCount > 0) parts.push(`지씨 ${gcCount}`);
-        if (gdCount > 0) parts.push(`지디 ${gdCount}`);
-        if (gechaSum > 0) parts.push(`게차 ${gechaSum}명`);
+        if (partyStrings.length > 0) parts.push(...partyStrings);
         if (sales > 0) parts.push(`판매직 ${sales}명`);
 
         const text = parts.length > 0 ? parts.join(' / ') : "인원부족 사유 없음";
@@ -658,11 +666,8 @@
         let sA = (sbState.currentSetAttacker === 'A') ? (f ? '수비' : '공격') : (f ? '공격' : '수비');
         
         const bA = document.getElementById('badgeA'); const bB = document.getElementById('badgeB');
-        bA.innerText = sA; bA.className = sA === '공격' ? 'pos-badge bg-atk' : 'pos-badge bg-atk'; // logic fix needed or keep same?
-        // 기존 스타일 유지 (공격-atk, 수비-def)
-        bA.className = sA === '공격' ? 'pos-badge bg-atk' : 'pos-badge bg-def';
-        bB.innerText = (sA === '공격' ? '수비' : '공격'); 
-        bB.className = sA === '수비' ? 'pos-badge bg-atk' : 'pos-badge bg-def';
+        bA.innerText = sA; bA.className = sA === '공격' ? 'pos-badge bg-atk' : 'pos-badge bg-def';
+        bB.innerText = (sA === '공격' ? '수비' : '공격'); bB.className = sA === '수비' ? 'pos-badge bg-atk' : 'pos-badge bg-def';
 
         document.getElementById('revTeam').innerText = sbState.reverseTurn === 'A' ? '우리팀' : '상대팀';
         document.getElementById('chatDisplay').innerText = `${sbState.largeA}${sbState.largeB} ${sbState.smallA}${sbState.smallB}`;

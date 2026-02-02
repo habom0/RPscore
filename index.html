@@ -66,13 +66,9 @@
         body { 
             background: var(--bg-body); 
             color: var(--text-main); 
-            margin: 0; 
-            padding: 0;
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            min-height: 100vh;
-            font-size: 16px;
+            margin: 0; padding: 0;
+            display: flex; flex-direction: column; align-items: center; 
+            min-height: 100vh; font-size: 16px;
             padding-bottom: var(--nav-height); 
             transition: background 0.3s, color 0.3s;
         }
@@ -435,68 +431,80 @@
 </nav>
 
 <script type="module">
-    // Firebase 관련 초기화 (다크모드 영구 저장을 위해 필요)
+    // Firebase CDN 모듈
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    const firebaseConfig = JSON.parse(__firebase_config);
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-    
-    let user = null;
-
-    // 인증 및 다크모드 로드 로직
-    const initApp = async () => {
+    // 환경 변수 감지 및 안전한 파싱
+    const getEnvConfig = () => {
         try {
-            await signInAnonymously(auth);
-            onAuthStateChanged(auth, async (u) => {
-                user = u;
-                if (user) {
-                    const themeDoc = await getDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'theme'));
-                    if (themeDoc.exists() && themeDoc.data().isDarkMode) {
-                        applyDarkMode(true);
-                    }
-                }
-            });
-        } catch (e) {
-            console.error("Auth initialization failed");
+            return typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        } catch (e) { return null; }
+    };
+
+    const firebaseConfig = getEnvConfig();
+    const isExternal = !firebaseConfig;
+    let user = null;
+    let db = null;
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+    // 다크모드 적용 함수 (전역)
+    window.applyDarkMode = (isDark) => {
+        if (isDark) document.body.classList.add('dark-mode');
+        else document.body.classList.remove('dark-mode');
+        const btnText = isDark ? '☀️' : '🌙';
+        ['dark-btn', 'dark-btn-calc'].forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.innerText = btnText;
+        });
+    };
+
+    // 테마 설정 저장 함수
+    window.saveThemePreference = async (isDark) => {
+        if (!isExternal && user && db) {
+            try {
+                await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'theme'), { isDarkMode: isDark });
+            } catch (e) { console.warn("Firebase save failed"); }
+        } else {
+            localStorage.setItem('rp_manager_theme', isDark ? 'dark' : 'light');
         }
     };
 
-    function applyDarkMode(isDark) {
-        if (isDark) {
-            document.body.classList.add('dark-mode');
-        } else {
-            document.body.classList.remove('dark-mode');
-        }
-        const btnText = isDark ? '☀️' : '🌙';
-        const d1 = document.getElementById('dark-btn');
-        const d2 = document.getElementById('dark-btn-calc');
-        if(d1) d1.innerText = btnText;
-        if(d2) d2.innerText = btnText;
-    }
+    // 앱 초기화 로직
+    const initApp = async () => {
+        // 1. 외부 환경인 경우 로컬 스토리지 우선 확인
+        const localTheme = localStorage.getItem('rp_manager_theme');
+        if (localTheme === 'dark') applyDarkMode(true);
 
-    // 전역으로 함수 노출 (HTML onclick용)
-    window.toggleDarkMode = async function() {
-        const isCurrentlyDark = document.body.classList.contains('dark-mode');
-        const newMode = !isCurrentlyDark;
-        applyDarkMode(newMode);
-
-        if (user) {
+        // 2. 파이어베이스 환경인 경우 클라우드 동기화 시도
+        if (!isExternal) {
             try {
-                await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'theme'), {
-                    isDarkMode: newMode
+                const app = initializeApp(firebaseConfig);
+                const auth = getAuth(app);
+                db = getFirestore(app);
+                await signInAnonymously(auth);
+                onAuthStateChanged(auth, async (u) => {
+                    user = u;
+                    if (user) {
+                        const themeDoc = await getDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'theme'));
+                        if (themeDoc.exists()) applyDarkMode(themeDoc.data().isDarkMode);
+                    }
                 });
             } catch (e) {
-                console.error("Failed to save theme");
+                console.warn("Cloud storage init failed, using local mode.");
             }
         }
     };
 
-    // 나머지 함수들 전역 노출
+    // --- 전역 함수 노출 시작 ---
+    window.toggleDarkMode = function() {
+        const isCurrentlyDark = document.body.classList.contains('dark-mode');
+        const newMode = !isCurrentlyDark;
+        applyDarkMode(newMode);
+        saveThemePreference(newMode);
+    };
+
     window.switchTab = function(tabId, el) {
         document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
@@ -506,14 +514,13 @@
     };
 
     window.openHelp = function(type) {
-        const title = document.getElementById('help-title');
-        const desc = document.getElementById('help-desc');
+        const title = document.getElementById('help-title'), desc = document.getElementById('help-desc');
         if (type === 'calculator') {
             title.innerText = "👥 인원 계산기 사용법";
-            desc.innerHTML = "1. <b>전체/잠수/판매직</b> 인원을 순서대로 입력하세요.<br>2. 현재 진행 중인 <b>지상/게차 파티</b>를 선택하여 추가하세요.<br>3. 남은 <b>대응 가능 가용 인원</b>이 실시간으로 계산됩니다.";
+            desc.innerHTML = "1. <b>전체/잠수/판매직</b> 인원을 순서대로 입력하세요.<br>2. <b>지상/게차 파티</b>를 선택하여 추가하세요.<br>3. 남은 <b>대응 가능 인원</b>이 실시간 계산됩니다.";
         } else {
             title.innerText = "⚔️ 스코어보드 사용법";
-            desc.innerHTML = "1. 선포한 팀을 선택해 게임을 시작하세요.<br>2. <b>단축키 Q(1)</b>: 우리팀 / <b>E(2)</b>: 상대팀 / <b>X</b>: 되돌리기.<br>3. 3선승 시 한 세트(큰스)가 올라가며 순서가 자동 계산됩니다.";
+            desc.innerHTML = "1. 선포팀을 선택해 게임을 시작하세요.<br>2. <b>Q(1)</b>: 우리팀 / <b>E(2)</b>: 상대팀 / <b>X</b>: 되돌리기.<br>3. 3선승 시 한 세트(큰스)가 올라가며 순서가 자동 계산됩니다.";
         }
         document.getElementById('modal-overlay').style.display = 'block';
         document.getElementById('help-modal').style.display = 'block';
@@ -524,21 +531,17 @@
         document.getElementById('help-modal').style.display = 'none';
     };
 
-    /* --- [인원 계산기 로직] --- */
-    let calcStep = 1;
-    let calcValues = { total: "0", afk: "0", sales: "0" };
-    let calcParties = [];
+    /* --- 인원 계산기 로직 --- */
+    let calcStep = 1, calcValues = { total: "0", afk: "0", sales: "0" }, calcParties = [];
 
     window.pressNum = function(num) {
-        if (calcStep > 3) return;
         const key = calcStep === 1 ? "total" : calcStep === 2 ? "afk" : "sales";
-        if (calcValues[key] === "0") calcValues[key] = num.toString();
-        else calcValues[key] += num.toString();
+        if (calcStep > 3) return;
+        calcValues[key] = calcValues[key] === "0" ? num.toString() : calcValues[key] + num.toString();
         document.getElementById('current-val').innerText = calcValues[key];
     };
 
     window.pressDel = function() {
-        if (calcStep > 3) return;
         const key = calcStep === 1 ? "total" : calcStep === 2 ? "afk" : "sales";
         calcValues[key] = calcValues[key].slice(0, -1) || "0";
         document.getElementById('current-val').innerText = calcValues[key];
@@ -558,8 +561,7 @@
                 document.getElementById('numpad-ui').style.display = 'none';
                 document.getElementById('party-selection').style.display = 'block';
                 document.getElementById('result-box').style.display = 'block';
-                calcStep = 4;
-                calculateRP();
+                calcStep = 4; calculateRP();
             }
         }
     };
@@ -568,24 +570,14 @@
     window.removeParty = function(idx) { calcParties.splice(idx, 1); calculateRP(); };
     
     function calculateRP() {
-        const total = parseInt(calcValues.total);
-        const afk = parseInt(calcValues.afk);
-        const sales = parseInt(calcValues.sales);
+        const total = parseInt(calcValues.total), afk = parseInt(calcValues.afk), sales = parseInt(calcValues.sales);
         const groundSum = calcParties.filter(p => p.type === 'GC').reduce((a, b) => a + b.count, 0);
         const gechaSum = calcParties.filter(p => p.type === 'GE').reduce((a, b) => a + b.count, 0);
         const final = Math.max(0, total - afk - sales - (groundSum + gechaSum));
         document.getElementById('final-num').innerText = final;
-        
-        const listContainer = document.getElementById('party-list');
-        listContainer.innerHTML = calcParties.length === 0 ? "<span style='color:#adb5bd;'>목록이 비어 있습니다.</span>" : calcParties.map((p, i) => `<div onclick="removeParty(${i})" style="background:var(--bg-card-hover); padding:8px 16px; border-radius:2rem; font-size:0.9rem; font-weight:700; color:var(--text-sub); cursor:pointer; display:flex; align-items:center; gap:6px; border: 1px solid var(--border);">${p.type==='GC'?(p.count>=6?'지씨':'지디'):'게차'}(${p.count}) <span style="color:var(--danger);">×</span></div>`).join('');
-        
-        const stats = {};
-        calcParties.forEach(p => { 
-            const k = p.type==='GC'?(p.count>=6?`지씨(${p.count}${p.count})`:`지디(${p.count}${p.count})`):`게차(${p.count})`; 
-            stats[k] = (stats[k]||0)+1; 
-        });
-        const pStrings = Object.entries(stats).map(([k, c]) => `${k}${c}`);
-        const parts = [`총원 ${total}명`];
+        document.getElementById('party-list').innerHTML = calcParties.length === 0 ? "<span style='color:#adb5bd;'>목록이 비어 있습니다.</span>" : calcParties.map((p, i) => `<div onclick="removeParty(${i})" style="background:var(--bg-card-hover); padding:8px 16px; border-radius:2rem; font-size:0.9rem; font-weight:700; color:var(--text-sub); cursor:pointer; display:flex; align-items:center; gap:6px; border: 1px solid var(--border);">${p.type==='GC'?(p.count>=6?'지씨':'지디'):'게차'}(${p.count}) <span style="color:var(--danger);">×</span></div>`).join('');
+        const stats = {}; calcParties.forEach(p => { const k = p.type==='GC'?(p.count>=6?`지씨(${p.count}${p.count})`:`지디(${p.count}${p.count})`):`게차(${p.count})`; stats[k] = (stats[k]||0)+1; });
+        const pStrings = Object.entries(stats).map(([k, c]) => `${k}${c}`), parts = [`총원 ${total}명`];
         if (afk > 0) parts.push(`잠수 ${afk}명`);
         if (pStrings.length > 0) parts.push(...pStrings);
         if (sales > 0) parts.push(`판매직 ${sales}명`);
@@ -596,31 +588,25 @@
     window.copyResult = function() {
         const t = document.getElementById('preview-text').innerText;
         navigator.clipboard.writeText(t).then(() => {
-            const b = document.querySelector('.copy-btn');
-            const old = b.innerText; b.innerText = "✅ 복사 완료";
-            setTimeout(() => b.innerText = old, 1500);
+            const b = document.querySelector('.copy-btn'); const old = b.innerText;
+            b.innerText = "✅ 복사 완료"; setTimeout(() => b.innerText = old, 1500);
         });
     };
 
     window.copyShortReason = function() {
-        const afk = parseInt(calcValues.afk), stats = {};
-        const sales = parseInt(calcValues.sales);
-        calcParties.forEach(p => { 
-            const k = p.type==='GC'?(p.count>=6?`지씨(${p.count}${p.count})`:`지디(${p.count}${p.count})`):`게차(${p.count})`; 
-            stats[k] = (stats[k]||0)+1; 
-        });
+        const afk = parseInt(calcValues.afk), sales = parseInt(calcValues.sales), stats = {};
+        calcParties.forEach(p => { const k = p.type==='GC'?(p.count>=6?`지씨(${p.count}${p.count})`:`지디(${p.count}${p.count})`):`게차(${p.count})`; stats[k] = (stats[k]||0)+1; });
         const parts = [], pStrings = Object.entries(stats).map(([k, c]) => `${k}${c}`);
         if (afk > 0) parts.push(`잠수 ${afk}명`);
         if (pStrings.length > 0) parts.push(...pStrings);
         if (sales > 0) parts.push(`판매직 ${sales}명`);
-        navigator.clipboard.writeText(parts.length > 0 ? parts.join(' / ') : "사유 없음").then(() => { 
-            const b = document.querySelector('.copy-btn-reason');
-            const old = b.innerText; b.innerText = "✅ 사유 복사 완료";
-            setTimeout(() => b.innerText = old, 1500);
+        navigator.clipboard.writeText(parts.length > 0 ? parts.join(' / ') : "사유 없음").then(() => {
+            const b = document.querySelector('.copy-btn-reason'); const old = b.innerText;
+            b.innerText = "✅ 사유 복사 완료"; setTimeout(() => b.innerText = old, 1500);
         });
     };
 
-    /* --- [스코어보드 로직] --- */
+    /* --- 스코어보드 로직 --- */
     let sbState = { isStarted: false, initial: 'A', currentSetAttacker: 'A', largeA: 0, largeB: 0, smallA: 0, smallB: 0, roundLogs: [], reverseTurn: 'B' };
     let sbHistory = [];
 
@@ -711,8 +697,6 @@
     });
 
     document.getElementById('ind-1').classList.add('active');
-    
-    // 앱 초기화 실행
     initApp();
 </script>
 

@@ -30,11 +30,16 @@
     <style>
         :root { 
             --primary: #3182f6;    /* Toss Blue */
-            --toss-gray: #f2f4f6;
-            --toss-text-main: #191f28;
-            --toss-text-sub: #4e5968;
-            --toss-text-desc: #8b95a1;
-            --white: #ffffff;
+            --bg-body: #f2f4f6;
+            --bg-app: #ffffff;
+            --bg-card: #f9fafb;
+            --bg-card-hover: #eef0f3;
+            --text-main: #191f28;
+            --text-sub: #4e5968;
+            --text-desc: #8b95a1;
+            --border: #e5e8eb;
+            --nav-bg: #ffffff;
+            --nav-border: rgba(0,0,0,0.08);
             --danger: #f04452;
             --atk-color: #f76707;
             --def-color: #495057;
@@ -42,11 +47,26 @@
             --nav-height: 75px; 
         }
 
+        /* 다크모드 변수 설정 - 가독성 향상을 위해 카드 색상 조정 */
+        body.dark-mode {
+            --bg-body: #101012;
+            --bg-app: #17171c;
+            --bg-card: #2c2c35;      /* 배경보다 눈에 띄게 더 밝은 톤으로 수정 */
+            --bg-card-hover: #373742;
+            --text-main: #f9fafb;
+            --text-sub: #d1d6db;
+            --text-desc: #8b95a1;
+            --border: #3d3d4a;      /* 명확한 구분을 위해 테두리 색상 강조 */
+            --nav-bg: #1c1c22;
+            --nav-border: rgba(255,255,255,0.12);
+            --shadow: 0 8px 32px rgba(0,0,0,0.5);
+        }
+
         /* 기본 설정 */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Pretendard', sans-serif; letter-spacing: -0.02em; }
         body { 
-            background: var(--toss-gray); 
-            color: var(--toss-text-main); 
+            background: var(--bg-body); 
+            color: var(--text-main); 
             margin: 0; 
             padding: 0;
             display: flex; 
@@ -55,13 +75,14 @@
             min-height: 100vh;
             font-size: 16px;
             padding-bottom: var(--nav-height); 
+            transition: background 0.3s, color 0.3s;
         }
 
-        /* 공통 컨테이너 - 화면을 가득 채우도록 설정 */
+        /* 공통 컨테이너 */
         .app-container { 
             width: 100%; 
             max-width: 760px; 
-            background: var(--white); 
+            background: var(--bg-app); 
             padding: 2.5rem 1.5rem; 
             border-radius: 0 0 2.5rem 2.5rem; 
             box-shadow: var(--shadow);
@@ -69,59 +90,67 @@
             flex-direction: column;
             min-height: calc(100vh - var(--nav-height));
             position: relative;
+            transition: background 0.3s;
         }
 
         header { margin-bottom: 2rem; position: relative; text-align: center; }
-        header h1 { font-size: 1.6rem; font-weight: 800; margin: 0; }
+        header h1 { font-size: 1.6rem; font-weight: 800; margin: 0; color: var(--text-main); }
         header .sub-title { font-size: 0.9rem; color: var(--danger); font-weight: 700; margin-top: 6px; display: block; }
 
-        .help-icon {
-            position: absolute; top: 0; right: 0; width: 30px; height: 30px;
-            background: none; color: var(--toss-text-desc); border: 2.2px solid #e5e8eb;
-            border-radius: 50%; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;
+        /* 우측 상단 유틸리티 버튼들 */
+        .header-utils {
+            position: absolute; top: 0; right: 0; display: flex; gap: 10px;
         }
+
+        .util-btn {
+            width: 32px; height: 32px;
+            background: none; color: var(--text-desc); border: 2.2px solid var(--border);
+            border-radius: 50%; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;
+            transition: 0.2s;
+        }
+        .util-btn:active { transform: scale(0.9); background: var(--bg-card); }
 
         /* 탭 시스템 */
         .tab-content { display: none; width: 100%; animation: fadeIn 0.4s ease; flex-direction: column; flex: 1; }
         .tab-content.active { display: flex; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- [탭 1] 인원 계산기 스타일 --- */
+        /* --- 인원 계산기 스타일 --- */
         .summary-box { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 2.5rem; }
         .step-indicator { 
-            background: #f9fafb; padding: 1.2rem 0.5rem; border-radius: 1.2rem; text-align: center;
-            border: 2px solid transparent; transition: 0.3s;
+            background: var(--bg-card); padding: 1.2rem 0.5rem; border-radius: 1.2rem; text-align: center;
+            border: 2px solid var(--border); transition: 0.3s;
         }
-        .step-indicator.active { border-color: var(--primary); background: #fff; box-shadow: 0 4px 10px rgba(49, 130, 246, 0.1); }
-        .label { font-size: 0.85rem; font-weight: 600; color: var(--toss-text-sub); margin-bottom: 6px; display: block; }
+        .step-indicator.active { border-color: var(--primary); background: var(--bg-app); box-shadow: 0 4px 12px rgba(49, 130, 246, 0.15); }
+        .label { font-size: 0.85rem; font-weight: 600; color: var(--text-sub); margin-bottom: 6px; display: block; }
         .val { font-size: 1.3rem; font-weight: 800; color: var(--primary); }
 
         .input-hero { text-align: center; margin-bottom: 2rem; }
-        .input-hero .title { font-size: 1.1rem; font-weight: 600; color: var(--toss-text-sub); display: block; margin-bottom: 15px; }
-        .input-hero .number { font-size: 4.5rem; font-weight: 800; color: var(--toss-text-main); letter-spacing: -2px; }
+        .input-hero .title { font-size: 1.1rem; font-weight: 600; color: var(--text-sub); display: block; margin-bottom: 15px; }
+        .input-hero .number { font-size: 4.5rem; font-weight: 800; color: var(--text-main); letter-spacing: -2px; }
 
         .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; width: 100%; max-width: 400px; margin: 0 auto 1.5rem auto; }
         .key { 
-            height: 75px; font-size: 1.6rem; font-weight: 600; background: #f9fafb; 
-            border: none; border-radius: 1.2rem; cursor: pointer; 
+            height: 75px; font-size: 1.6rem; font-weight: 600; background: var(--bg-card); 
+            border: 1px solid var(--border); border-radius: 1.2rem; cursor: pointer; color: var(--text-main);
             transition: all 0.1s; display: flex; align-items: center; justify-content: center;
         }
-        .key:active { background: #e5e8eb; transform: scale(0.95); }
-        .key.enter { background: var(--primary); color: white; font-size: 1.1rem; font-weight: 700; }
-        .key.del { color: var(--toss-text-sub); }
+        .key:active { background: var(--bg-card-hover); transform: scale(0.95); }
+        .key.enter { background: var(--primary); color: white; font-size: 1.1rem; font-weight: 700; border: none; }
+        .key.del { color: var(--text-sub); }
 
-        .section-card { background: #f9fafb; border-radius: 1.8rem; padding: 1.8rem; margin-bottom: 1.5rem; }
+        .section-card { background: var(--bg-card); border-radius: 1.8rem; padding: 1.8rem; margin-bottom: 1.5rem; border: 1px solid var(--border); }
         .section-header { display: flex; align-items: center; gap: 8px; margin-bottom: 1.2rem; }
-        .section-header .title { font-size: 1.1rem; font-weight: 700; color: var(--toss-text-main); }
+        .section-header .title { font-size: 1.1rem; font-weight: 700; color: var(--text-main); }
 
         .btn-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
         .p-btn { 
-            height: 52px; border: none; border-radius: 0.9rem; background: #fff;
-            color: var(--toss-text-sub); font-weight: 700; font-size: 0.95rem; 
+            height: 52px; border: 1px solid var(--border); border-radius: 0.9rem; background: var(--bg-app);
+            color: var(--text-sub); font-weight: 700; font-size: 0.95rem; 
             cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.04); transition: 0.2s;
         }
-        .p-btn:active { background: #f2f4f6; transform: scale(0.97); }
-        .p-btn.highlight { background: var(--toss-text-main); color: #fff; }
+        .p-btn:active { background: var(--bg-card-hover); transform: scale(0.97); }
+        .p-btn.highlight { background: var(--text-main); color: var(--bg-app); border: none; }
 
         .result-box-container { display: none; }
         .result-card { 
@@ -129,24 +158,24 @@
             border-radius: 2.2rem; text-align: center; margin-top: 2rem; background: rgba(49, 130, 246, 0.01);
         }
         .res-num { font-size: 5rem; font-weight: 800; color: var(--primary); margin: 0.5rem 0; line-height: 1; }
-        .preview-box { background: #f2f4f6; padding: 1.2rem; border-radius: 1.2rem; margin: 1.5rem 0; font-weight: 700; color: var(--toss-text-sub); line-height: 1.6; }
+        .preview-box { background: var(--bg-card-hover); padding: 1.2rem; border-radius: 1.2rem; margin: 1.5rem 0; font-weight: 700; color: var(--text-sub); line-height: 1.6; border: 1px solid var(--border); }
         .copy-btn { width: 100%; height: 65px; background: var(--primary); color: white; border: none; border-radius: 1.2rem; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
         .copy-btn-reason { width: 100%; height: 65px; background: #6b7684; color: white; border: none; border-radius: 1.2rem; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: 0.2s; margin-top: 12px; }
 
-        /* --- [탭 2] 스코어보드 스타일 --- */
-        .persistent-settings { background: #f9fafb; border-radius: 1.5rem; padding: 1.2rem 1.8rem; margin-bottom: 1.5rem; }
+        /* --- 스코어보드 스타일 --- */
+        .persistent-settings { background: var(--bg-card); border-radius: 1.5rem; padding: 1.2rem 1.8rem; margin-bottom: 1.5rem; border: 1px solid var(--border); }
         .settings-row { display: grid; grid-template-columns: 0.8fr 0.8fr 1.4fr; gap: 12px; align-items: flex-end; }
         .setting-item { display: flex; flex-direction: column; gap: 6px; }
-        .label-sm { font-size: 0.8rem; font-weight: 700; color: var(--toss-text-desc); }
-        select { height: 50px; border: 1.5px solid #e5e8eb; border-radius: 12px; font-weight: 800; font-size: 1.05rem; color: var(--toss-text-main); background: #fff; text-align: center; outline: none; }
+        .label-sm { font-size: 0.8rem; font-weight: 700; color: var(--text-desc); }
+        select { height: 50px; border: 1.5px solid var(--border); border-radius: 12px; font-weight: 800; font-size: 1.05rem; color: var(--text-main); background: var(--bg-app); text-align: center; outline: none; }
         .init-btns-mini { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .btn-init-mini { height: 50px; border: 1.5px solid #e5e8eb; border-radius: 12px; background: white; font-size: 0.9rem; cursor: pointer; font-weight: 700; color: var(--toss-text-sub); }
+        .btn-init-mini { height: 50px; border: 1.5px solid var(--border); border-radius: 12px; background: var(--bg-app); font-size: 0.9rem; cursor: pointer; font-weight: 700; color: var(--text-sub); }
         .btn-init-mini.active-a { background: var(--primary); color: white; border-color: var(--primary); }
         .btn-init-mini.active-b { background: var(--danger); color: white; border-color: var(--danger); }
 
-        .scoreboard { display: flex; align-items: center; justify-content: space-around; margin-bottom: 1.5rem; background: #f9fafb; padding: 2.2rem 1.2rem; border-radius: 2.2rem; }
+        .scoreboard { display: flex; align-items: center; justify-content: space-around; margin-bottom: 1.5rem; background: var(--bg-card); padding: 2.2rem 1.2rem; border-radius: 2.2rem; border: 1.5px solid var(--border); }
         .team-box { text-align: center; flex: 1; }
-        .score-large { font-size: 2.2rem; font-weight: 800; color: var(--toss-text-sub); line-height: 1; }
+        .score-large { font-size: 2.2rem; font-weight: 800; color: var(--text-sub); line-height: 1; }
         .score-small { font-size: 8.5rem; font-weight: 950; line-height: 0.85; margin: 12px 0; letter-spacing: -6px; }
         .team-a .score-small { color: var(--primary); }
         .team-b .score-small { color: var(--danger); }
@@ -161,100 +190,94 @@
         .btn-win-b { background: var(--danger); }
         .btn-win:active { transform: scale(0.96); }
 
-        .copy-bar { background: var(--toss-text-main); color: white; padding: 0.6rem 1.8rem; border-radius: 1.2rem; text-align: center; margin-bottom: 1.2rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        /* 스코어보드 중앙 정보 바 레이아웃 - 버튼 분리형 */
+        .info-undo-container {
+            display: flex; gap: 10px; width: 100%; max-width: 500px; margin: 0 auto 1.5rem auto;
+        }
+        .rev-turn-box { 
+            flex: 1; background: var(--bg-card); padding: 12px 20px; border-radius: 50px; 
+            text-align: center; border: 2.2px solid var(--border); font-weight: 800; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .undo-box-btn { 
+            background: var(--bg-card); color: var(--text-sub); border: 2.2px solid var(--border); 
+            padding: 12px 20px; border-radius: 50px; font-size: 0.85rem; 
+            cursor: pointer; transition: 0.2s; font-weight: 800;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .undo-box-btn:active { transform: scale(0.94); background: var(--bg-card-hover); }
+
+        .copy-bar { background: var(--text-main); color: var(--bg-app); padding: 0.6rem 1.8rem; border-radius: 1.2rem; text-align: center; margin-bottom: 1.2rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         .chat-val { font-size: 1.8rem; font-weight: 900; letter-spacing: 4px; }
         
         .h-table { width: 100%; border-collapse: collapse; text-align: center; font-size: 1.05rem; table-layout: fixed; }
-        .h-table th { padding: 14px 5px; color: var(--toss-text-sub); font-size: 1rem; border-bottom: 2px solid #e5e8eb; }
-        .h-table td { padding: 14px 5px; font-weight: 800; border-bottom: 1px solid #eff2f5; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        .h-table th { padding: 14px 5px; color: var(--text-sub); font-size: 1rem; border-bottom: 2px solid var(--border); }
+        .h-table td { padding: 14px 5px; font-weight: 800; border-bottom: 1px solid var(--border); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
         .h-table th:nth-child(1) { width: 25%; }
         .h-table th:nth-child(2) { width: 37.5%; }
         .h-table th:nth-child(3) { width: 37.5%; }
 
-        .hist-winner-a { background-color: #f0f7ff !important; color: var(--primary); }
-        .hist-winner-b { background-color: #fff5f5 !important; color: var(--danger); }
+        .hist-winner-a { background-color: rgba(49, 130, 246, 0.1) !important; color: var(--primary); }
+        .hist-winner-b { background-color: rgba(240, 68, 82, 0.1) !important; color: var(--danger); }
 
-        .settle-card { padding: 1.5rem 1.8rem; background: #f0f7ff; border-radius: 1.5rem; text-align: center; margin-top: 1rem; display: flex; align-items: center; justify-content: space-between; }
+        .settle-card { padding: 1.5rem 1.8rem; background: rgba(49, 130, 246, 0.08); border-radius: 1.5rem; text-align: center; margin-top: 1rem; display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--border); }
         .money-val { font-size: 1.4rem; font-weight: 900; color: var(--primary); }
         .btn-copy-num { padding: 12px 22px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; }
 
-        /* 도움말 모달 스타일 */
-        #modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 1100; backdrop-filter: blur(4px); }
-        .help-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 2.5rem 2rem; border-radius: 2rem; z-index: 1200; width: 85%; max-width: 360px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
-        .help-modal h3 { margin: 0 0 1.2rem 0; font-weight: 800; text-align: center; font-size: 1.2rem; }
-        .help-modal p { font-size: 0.95rem; color: var(--toss-text-sub); line-height: 1.7; margin-bottom: 2rem; word-break: keep-all; }
+        /* 도움말 모달 */
+        #modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1100; backdrop-filter: blur(4px); }
+        .help-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--bg-app); padding: 2.5rem 2rem; border-radius: 2rem; z-index: 1200; width: 85%; max-width: 360px; box-shadow: var(--shadow); border: 1.5px solid var(--border); }
+        .help-modal h3 { margin: 0 0 1.2rem 0; font-weight: 800; text-align: center; font-size: 1.2rem; color: var(--text-main); }
+        .help-modal p { font-size: 0.95rem; color: var(--text-sub); line-height: 1.7; margin-bottom: 2rem; word-break: keep-all; }
         .help-modal .btn-close { width: 100%; padding: 1rem; border: none; background: var(--primary); color: white; border-radius: 1rem; font-weight: 700; cursor: pointer; font-size: 1rem; }
 
         /* 하단 네비게이션 */
         .bottom-nav {
-            position: fixed; 
-            bottom: 0; 
-            left: 50%; 
-            transform: translateX(-50%);
-            width: 100%; 
-            max-width: 760px; 
-            height: var(--nav-height);
-            background: #ffffff; 
-            display: flex; 
-            justify-content: space-around; 
-            align-items: center;
-            border-top: 1px solid rgba(0,0,0,0.08);
-            border-top-left-radius: 24px;
-            border-top-right-radius: 24px;
-            z-index: 1000; 
-            box-shadow: 0 -8px 25px rgba(0,0,0,0.05);
-            padding: 0 10px;
+            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 760px; height: var(--nav-height);
+            background: var(--nav-bg); display: flex; justify-content: space-around; align-items: center;
+            border-top: 1px solid var(--nav-border); border-top-left-radius: 24px; border-top-right-radius: 24px;
+            z-index: 1000; box-shadow: 0 -8px 25px rgba(0,0,0,0.05); padding: 0 10px; transition: background 0.3s;
         }
-        .nav-item {
-            flex: 1; display: flex; flex-direction: column; align-items: center; 
-            justify-content: center; gap: 4px; color: #b0b8c1; cursor: pointer; transition: 0.2s;
-            height: 100%;
-        }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: #b0b8c1; cursor: pointer; transition: 0.2s; height: 100%; }
         .nav-item.active { color: var(--primary); }
-        .nav-item .emoji-icon {
-            font-size: 26px;
-            line-height: 1;
-            transition: transform 0.2s;
-        }
+        .nav-item .emoji-icon { font-size: 26px; line-height: 1; transition: transform 0.2s; }
         .nav-item.active .emoji-icon { transform: scale(1.1); }
-        .nav-item span { font-size: 11px; font-weight: 700; color: #6b7684; }
+        .nav-item span { font-size: 11px; font-weight: 700; color: var(--text-desc); }
         .nav-item.active span { color: var(--primary); }
-        .nav-item:active { background: rgba(0,0,0,0.02); }
+        .nav-item:active { background: rgba(128,128,128,0.05); }
 
-        /* 푸터 시그니처 */
-        footer { 
-            margin-top: auto; 
-            padding: 3rem 0 1.5rem 0; 
-            text-align: center; 
-            opacity: 0.6; 
-        }
+        /* 푸터 서명 */
+        footer { margin-top: auto; padding: 3rem 0 1.5rem 0; text-align: center; opacity: 0.6; }
         .sig-line { width: 30px; height: 1.5px; background: #d1d6db; margin: 0 auto 12px auto; }
-        .sig-crafted { font-size: 0.65rem; color: #8b95a1; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 4px; display: block; }
-        .sig-habom { font-size: 1.1rem; letter-spacing: 0.4em; color: #b0b8c1; font-weight: 900; }
+        .sig-crafted { font-size: 0.65rem; color: var(--text-desc); font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 4px; display: block; }
+        .sig-habom { font-size: 1.1rem; letter-spacing: 0.4em; color: var(--text-desc); font-weight: 900; }
 
         @media (max-width: 650px) {
             .app-container { padding: 1.5rem 1rem; border-radius: 0; }
             .score-small { font-size: 5.5rem; letter-spacing: -3px; }
             .chat-val { font-size: 1.6rem; }
             .res-num { font-size: 3.5rem; }
-            .numpad { gap: 10px; }
             .key { height: 65px; border-radius: 1rem; }
             .settings-row { grid-template-columns: 1fr 1fr; }
             .setting-item:last-child { grid-column: span 2; margin-top: 10px; }
             .btn-win { height: 85px; font-size: 1.2rem; }
+            .info-undo-container { flex-direction: column; gap: 8px; }
+            .undo-box-btn { width: 100%; }
         }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    
     <!-- [탭 1] 스코어보드 섹션 -->
     <div id="tab-scoreboard" class="tab-content active">
         <header>
             <h1>⚔️ 지상 RP 스코어보드 ⚔️</h1>
             <span class="sub-title">당신도 이제 라운드걸 ✨ 찡긋- 😉💕</span>
-            <button class="help-icon" onclick="openHelp('scoreboard')">?</button>
+            <div class="header-utils">
+                <button class="util-btn" onclick="toggleDarkMode()" id="dark-btn">🌙</button>
+                <button class="util-btn" onclick="openHelp('scoreboard')">?</button>
+            </div>
         </header>
 
         <div class="persistent-settings">
@@ -278,7 +301,7 @@
         </div>
 
         <div id="setup-screen" style="text-align:center; padding: 3rem 0; flex: 1; display: flex; flex-direction: column; justify-content: center;">
-            <span style="font-size: 1.2rem; font-weight: 800; color: var(--toss-text-main); margin-bottom: 2rem; display: block;">게임을 시작할 선포팀을 선택하세요</span>
+            <span style="font-size: 1.2rem; font-weight: 800; color: var(--text-main); margin-bottom: 2rem; display: block;">게임을 시작할 선포팀을 선택하세요</span>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; width: 100%; max-width: 500px; margin: 0 auto;">
                 <button style="height:120px; border:none; border-radius:2rem; background:var(--primary); color:white; font-size:1.4rem; font-weight:900; cursor:pointer; box-shadow: 0 4px 15px rgba(49, 130, 246, 0.2);" onclick="setInitial('A')">우리팀 선포</button>
                 <button style="height:120px; border:none; border-radius:2rem; background:var(--danger); color:white; font-size:1.4rem; font-weight:900; cursor:pointer; box-shadow: 0 4px 15px rgba(240, 68, 82, 0.2);" onclick="setInitial('B')">상대팀 선포</button>
@@ -286,8 +309,12 @@
         </div>
 
         <div id="board-screen" style="display:none;">
-            <div style="background:#fff; padding:10px 25px; border-radius:50px; text-align:center; margin:0 auto 1.5rem auto; border:2px solid #e5e8eb; display:table; font-weight:800;">
-                🔄 다음 역선포 차례: <b id="revTeam" style="color:var(--primary); margin-left:8px;">-</b>
+            <!-- 역선포 박스와 되돌리기 버튼 분리 배치 -->
+            <div class="info-undo-container">
+                <div class="rev-turn-box">
+                    🔄 다음 역선포 차례: <b id="revTeam" style="color:var(--primary); margin-left:8px;">-</b>
+                </div>
+                <button class="undo-box-btn" onclick="undoScore()">되돌리기 (X)</button>
             </div>
 
             <div class="scoreboard">
@@ -344,7 +371,10 @@
         <header>
             <h1>👥 RP인원 계산기 👥</h1>
             <span class="sub-title">✨ RP 할래말래? 할래말래? 🤷‍♂️</span>
-            <button class="help-icon" onclick="openHelp('calculator')">?</button>
+            <div class="header-utils">
+                <button class="util-btn" onclick="toggleDarkMode()" id="dark-btn-calc">🌙</button>
+                <button class="util-btn" onclick="openHelp('calculator')">?</button>
+            </div>
         </header>
 
         <div class="summary-box">
@@ -404,7 +434,7 @@
                 </div>
             </div>
             <div style="padding: 0 10px; margin-bottom: 2.5rem;">
-                <span style="font-size: 0.9rem; font-weight: 700; color: var(--toss-text-desc); display: block; margin-bottom: 12px;">현재 진행 중인 파티</span>
+                <span style="font-size: 0.9rem; font-weight: 700; color: var(--text-desc); display: block; margin-bottom: 12px;">현재 진행 중인 파티</span>
                 <div id="party-list" style="display: flex; flex-wrap: wrap; gap: 10px;">목록이 비어 있습니다.</div>
             </div>
         </div>
@@ -441,12 +471,10 @@
         <div class="emoji-icon">⚔️</div>
         <span>스코어보드</span>
     </div>
-    
     <div class="nav-item" id="nav-calculator" onclick="switchTab('calculator', this)">
         <div class="emoji-icon">👥</div>
         <span>인원 계산기</span>
     </div>
-    
     <div class="nav-item" onclick="if(confirm('모든 데이터를 초기화하시겠습니까?')) location.reload()">
         <div class="emoji-icon">🔃</div>
         <span>전체 초기화</span>
@@ -458,66 +486,61 @@
     function switchTab(tabId, el) {
         document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-        
         document.getElementById(`tab-${tabId}`).classList.add('active');
         el.classList.add('active');
         window.scrollTo(0,0);
+    }
+
+    /* 다크모드 시스템 */
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        const btnText = isDark ? '☀️' : '🌙';
+        document.getElementById('dark-btn').innerText = btnText;
+        document.getElementById('dark-btn-calc').innerText = btnText;
     }
 
     /* 도움말 시스템 */
     function openHelp(type) {
         const title = document.getElementById('help-title');
         const desc = document.getElementById('help-desc');
-        
         if (type === 'calculator') {
             title.innerText = "👥 인원 계산기 사용법";
             desc.innerHTML = "1. <b>전체/잠수/판매직</b> 인원을 순서대로 입력하세요.<br>2. 현재 진행 중인 <b>지상/게차 파티</b>를 선택하여 추가하세요.<br>3. 남은 <b>대응 가능 가용 인원</b>이 실시간으로 계산됩니다.";
         } else {
             title.innerText = "⚔️ 스코어보드 사용법";
-            desc.innerHTML = "1. 선포한 팀을 선택해 게임을 시작하세요.<br>2. <b>단축키 Q(1)</b>: 우리팀 득점 / <b>E(2)</b>: 상대팀 득점.<br>3. 3선승 시 한 세트(큰스)가 올라가며 공격/수비 역선포 순서가 자동 계산됩니다.";
+            desc.innerHTML = "1. 선포한 팀을 선택해 게임을 시작하세요.<br>2. <b>단축키 Q(1)</b>: 우리팀 / <b>E(2)</b>: 상대팀 / <b>X</b>: 되돌리기.<br>3. 3선승 시 한 세트(큰스)가 올라가며 순서가 자동 계산됩니다.";
         }
-        
         document.getElementById('modal-overlay').style.display = 'block';
         document.getElementById('help-modal').style.display = 'block';
     }
-
     function closeHelp() {
         document.getElementById('modal-overlay').style.display = 'none';
         document.getElementById('help-modal').style.display = 'none';
     }
 
-    /* 전역 키보드 이벤트 리스너 통합 */
+    /* 전역 키보드 이벤트 리스너 */
     window.addEventListener('keydown', e => { 
         if (document.activeElement.tagName === 'SELECT' || document.activeElement.tagName === 'INPUT') return; 
-        
         const isCalcActive = document.getElementById('tab-calculator').classList.contains('active');
         const isBoardActive = document.getElementById('tab-scoreboard').classList.contains('active');
-
         if (isCalcActive) {
-            if (e.key >= '0' && e.key <= '9') {
-                e.preventDefault();
-                pressNum(parseInt(e.key));
-            } else if (e.key === 'Enter') {
-                e.preventDefault();
-                pressEnter();
-            } else if (e.key === 'Backspace') {
-                e.preventDefault();
-                pressDel();
-            }
+            if (e.key >= '0' && e.key <= '9') { e.preventDefault(); pressNum(parseInt(e.key)); }
+            else if (e.key === 'Enter') { e.preventDefault(); pressEnter(); }
+            else if (e.key === 'Backspace') { e.preventDefault(); pressDel(); }
         }
-
         if (isBoardActive && sbState.isStarted) {
             const k = e.key.toLowerCase(); 
             if (k === 'q' || k === '1') addWin('A'); 
             else if (k === 'e' || k === '2') addWin('B'); 
+            else if (k === 'x') undoScore();
         }
     });
 
-    /* --- [계산기 로직] --- */
+    /* --- [인원 계산기 로직] --- */
     let calcStep = 1;
     let calcValues = { total: "0", afk: "0", sales: "0" };
     let calcParties = [];
-
     function pressNum(num) {
         if (calcStep > 3) return;
         const key = calcStep === 1 ? "total" : calcStep === 2 ? "afk" : "sales";
@@ -525,19 +548,16 @@
         else calcValues[key] += num.toString();
         document.getElementById('current-val').innerText = calcValues[key];
     }
-
     function pressDel() {
         if (calcStep > 3) return;
         const key = calcStep === 1 ? "total" : calcStep === 2 ? "afk" : "sales";
         calcValues[key] = calcValues[key].slice(0, -1) || "0";
         document.getElementById('current-val').innerText = calcValues[key];
     }
-
     function pressEnter() {
         if (calcStep <= 3) {
             document.getElementById(`sum-${calcStep}`).innerText = calcValues[calcStep === 1 ? "total" : calcStep === 2 ? "afk" : "sales"];
             document.getElementById(`ind-${calcStep}`).classList.remove('active');
-            
             if (calcStep < 3) {
                 calcStep++;
                 document.getElementById(`ind-${calcStep}`).classList.add('active');
@@ -553,93 +573,47 @@
             }
         }
     }
-
     function addParty(type, count) { calcParties.push({type, count}); calculateRP(); }
     function removeParty(idx) { calcParties.splice(idx, 1); calculateRP(); }
-
-    // 파티 정보 그룹화 및 문자열 생성 함수
-    function getDetailedPartyString() {
-        const stats = {};
-        calcParties.forEach(p => {
-            let label = '';
-            let groupKey = '';
-            if (p.type === 'GC') {
-                label = p.count >= 6 ? '지씨' : '지디';
-                groupKey = `${label}(${p.count}${p.count})`;
-            } else {
-                label = '게차';
-                groupKey = `${label}(${p.count})`;
-            }
-            stats[groupKey] = (stats[groupKey] || 0) + 1;
-        });
-        return Object.entries(stats).map(([key, count]) => `${key}${count}`);
-    }
-
     function calculateRP() {
         const total = parseInt(calcValues.total);
         const afk = parseInt(calcValues.afk);
         const sales = parseInt(calcValues.sales);
-        const netActive = Math.max(0, total - afk);
         const groundSum = calcParties.filter(p => p.type === 'GC').reduce((a, b) => a + b.count, 0);
         const gechaSum = calcParties.filter(p => p.type === 'GE').reduce((a, b) => a + b.count, 0);
-        const final = Math.max(0, netActive - sales - (groundSum + gechaSum));
-        
+        const final = Math.max(0, total - afk - sales - (groundSum + gechaSum));
         document.getElementById('final-num').innerText = final;
-        
         const listContainer = document.getElementById('party-list');
-        if (calcParties.length === 0) listContainer.innerHTML = "<span style='color:#adb5bd; font-size:0.9rem;'>목록이 비어 있습니다.</span>";
-        else {
-            listContainer.innerHTML = calcParties.map((p, i) => {
-                let label = p.type === 'GC' ? (p.count >= 6 ? '지씨' : '지디') : '게차';
-                return `<div onclick="removeParty(${i})" style="background:#f2f4f6; padding:8px 16px; border-radius:2rem; font-size:0.9rem; font-weight:700; color:var(--toss-text-sub); cursor:pointer; display:flex; align-items:center; gap:6px;">${label}(${p.count}) <span style="color:var(--danger);">×</span></div>`;
-            }).join('');
-        }
-        
-        // 상세 현황 텍스트 조합
-        const partyStrings = getDetailedPartyString();
-        const parts = [];
-        parts.push(`총원 ${total}명`);
+        listContainer.innerHTML = calcParties.length === 0 ? "<span style='color:#adb5bd;'>목록이 비어 있습니다.</span>" : calcParties.map((p, i) => `<div onclick="removeParty(${i})" style="background:var(--bg-card-hover); padding:8px 16px; border-radius:2rem; font-size:0.9rem; font-weight:700; color:var(--text-sub); cursor:pointer; display:flex; align-items:center; gap:6px; border: 1px solid var(--border);">${p.type==='GC'?(p.count>=6?'지씨':'지디'):'게차'}(${p.count}) <span style="color:var(--danger);">×</span></div>`).join('');
+        const stats = {};
+        calcParties.forEach(p => { const k = p.type==='GC'?(p.count>=6?`지씨(${p.count}${p.count})`:`지디(${p.count}${p.count})`):`게차(${p.count})`; stats[k] = (stats[k]||0)+1; });
+        const pStrings = Object.entries(stats).map(([k, c]) => `${k}${c}`);
+        const parts = [`총원 ${total}명`];
         if (afk > 0) parts.push(`잠수 ${afk}명`);
-        if (partyStrings.length > 0) parts.push(...partyStrings);
+        if (pStrings.length > 0) parts.push(...pStrings);
         if (sales > 0) parts.push(`판매직 ${sales}명`);
         parts.push(`대응가능 ${final}명`);
-        
         document.getElementById('preview-text').innerText = parts.join(' / ');
     }
-
-    function copyResult() {
-        const t = document.getElementById('preview-text').innerText;
-        navigator.clipboard.writeText(t).then(() => {
-            const b = document.querySelector('.copy-btn');
-            const old = b.innerText; b.innerText = "✅ 복사 완료";
-            setTimeout(() => b.innerText = old, 1500);
-        });
-    }
-
-    // 인원부족 사유 복사 기능 (총원/대응가능 제외)
+    function copyResult() { const t = document.getElementById('preview-text').innerText; navigator.clipboard.writeText(t).then(() => { const b = document.querySelector('.copy-btn'); const old = b.innerText; b.innerText = "✅ 복사 완료"; setTimeout(() => b.innerText = old, 1500); }); }
     function copyShortReason() {
-        const afk = parseInt(calcValues.afk);
-        const sales = parseInt(calcValues.sales);
-        const partyStrings = getDetailedPartyString();
-
-        const parts = [];
+        const afk = parseInt(calcValues.afk), sales = parseInt(calcValues.sales), stats = {};
+        calcParties.forEach(p => { const k = p.type==='GC'?(p.count>=6?`지씨(${p.count}${p.count})`:`지디(${p.count}${p.count})`):`게차(${p.count})`; stats[k] = (stats[k]||0)+1; });
+        const parts = [], pStrings = Object.entries(stats).map(([k, c]) => `${k}${c}`);
         if (afk > 0) parts.push(`잠수 ${afk}명`);
-        if (partyStrings.length > 0) parts.push(...partyStrings);
+        if (pStrings.length > 0) parts.push(...pStrings);
         if (sales > 0) parts.push(`판매직 ${sales}명`);
-
-        const text = parts.length > 0 ? parts.join(' / ') : "인원부족 사유 없음";
-        
-        navigator.clipboard.writeText(text).then(() => {
-            const b = document.querySelector('.copy-btn-reason');
-            const old = b.innerText; b.innerText = "✅ 사유 복사 완료";
-            setTimeout(() => b.innerText = old, 1500);
-        });
+        navigator.clipboard.writeText(parts.length > 0 ? parts.join(' / ') : "사유 없음").then(() => { const b = document.querySelector('.copy-btn-reason'); const old = b.innerText; b.innerText = "✅ 사유 복사 완료"; setTimeout(() => b.innerText = old, 1500); });
     }
 
     /* --- [스코어보드 로직] --- */
     let sbState = { isStarted: false, initial: 'A', currentSetAttacker: 'A', largeA: 0, largeB: 0, smallA: 0, smallB: 0, roundLogs: [], reverseTurn: 'B' };
+    let sbHistory = [];
+
+    function saveSBHistory() { sbHistory.push(JSON.parse(JSON.stringify(sbState))); if(sbHistory.length > 50) sbHistory.shift(); }
 
     function setInitial(t) { 
+        saveSBHistory();
         sbState.isStarted = true; sbState.initial = t; sbState.currentSetAttacker = t; sbState.reverseTurn = (t === 'A') ? 'B' : 'A'; 
         document.getElementById('setup-screen').style.display = 'none';
         document.getElementById('board-screen').style.display = 'block';
@@ -650,12 +624,11 @@
 
     function addWin(t) { 
         if(!sbState.isStarted) return; 
+        saveSBHistory();
         let p = sbState.smallA + sbState.smallB, f = (p % 2 !== 0); 
         let sA = (sbState.currentSetAttacker === 'A') ? (f ? '수비' : '공격') : (f ? '공격' : '수비'); 
         sbState.roundLogs.push({ winner: t, sideA: sA, sideB: (sA === '공격' ? '수비' : '공격') }); 
-        
         if(t === 'A') sbState.smallA++; else sbState.smallB++; 
-
         if(sbState.smallA === 3 || sbState.smallB === 3) { 
             if(t === 'A') sbState.largeA++; else sbState.largeB++; 
             sbState.currentSetAttacker = sbState.reverseTurn; 
@@ -665,43 +638,35 @@
         renderScoreboard(); 
     }
 
+    function undoScore() {
+        if (sbHistory.length === 0) return;
+        sbState = sbHistory.pop();
+        if (!sbState.isStarted) {
+            document.getElementById('setup-screen').style.display = 'flex';
+            document.getElementById('board-screen').style.display = 'none';
+        }
+        renderScoreboard();
+    }
+
     function renderScoreboard() {
         if(!sbState.isStarted) return;
-        document.getElementById('lScoreA').innerText = sbState.largeA; 
-        document.getElementById('lScoreB').innerText = sbState.largeB;
-        document.getElementById('sScoreA').innerText = sbState.smallA; 
-        document.getElementById('sScoreB').innerText = sbState.smallB;
-
+        document.getElementById('lScoreA').innerText = sbState.largeA; document.getElementById('lScoreB').innerText = sbState.largeB;
+        document.getElementById('sScoreA').innerText = sbState.smallA; document.getElementById('sScoreB').innerText = sbState.smallB;
         let p = sbState.smallA + sbState.smallB, f = (p % 2 !== 0);
         let sA = (sbState.currentSetAttacker === 'A') ? (f ? '수비' : '공격') : (f ? '공격' : '수비');
-        
-        const bA = document.getElementById('badgeA'); const bB = document.getElementById('badgeB');
+        const bA = document.getElementById('badgeA'), bB = document.getElementById('badgeB');
         bA.innerText = sA; bA.className = sA === '공격' ? 'pos-badge bg-atk' : 'pos-badge bg-def';
         bB.innerText = (sA === '공격' ? '수비' : '공격'); bB.className = sA === '수비' ? 'pos-badge bg-atk' : 'pos-badge bg-def';
-
         document.getElementById('revTeam').innerText = sbState.reverseTurn === 'A' ? '우리팀' : '상대팀';
         document.getElementById('chatDisplay').innerText = `${sbState.largeA}${sbState.largeB} ${sbState.smallA}${sbState.smallB}`;
-        
         const m = Math.abs(sbState.largeA - sbState.largeB) * document.getElementById('mems').value * (document.getElementById('betAmount').value * 10000000);
         document.getElementById('moneyDisplay').innerText = `${m.toLocaleString()}원 (${(m/100000000).toFixed(1)}억)`; 
         document.getElementById('moneyDisplay').dataset.raw = m;
-
         const sb = document.getElementById('smallHistoryBody'); sb.innerHTML = '';
-        for(let i=0; i<5; i++) {
-            const l = sbState.roundLogs[i];
-            sb.innerHTML += `<tr><td>라운드 ${i+1}</td><td class="${l&&l.winner==='A'?'hist-winner-a':''}">${l&&l.winner==='A'?'['+l.sideA+'] 득점':'-'}</td><td class="${l&&l.winner==='B'?'hist-winner-b':''}">${l&&l.winner==='B'?'['+l.sideB+'] 득점':'-'}</td></tr>`;
-        }
+        for(let i=0; i<5; i++) { const l = sbState.roundLogs[i]; sb.innerHTML += `<tr><td>라운드 ${i+1}</td><td class="${l&&l.winner==='A'?'hist-winner-a':''}">${l&&l.winner==='A'?'['+l.sideA+'] 득점':'-'}</td><td class="${l&&l.winner==='B'?'hist-winner-b':''}">${l&&l.winner==='B'?'['+l.sideB+'] 득점':'-'}</td></tr>`; }
     }
 
-    function copyScore() { 
-        const t = document.getElementById('chatDisplay').innerText; 
-        navigator.clipboard.writeText(t).then(() => { 
-            const a = document.querySelector('.copy-bar'); const old = a.innerHTML;
-            a.innerText = '✅ 채팅 스코어 복사 완료'; a.style.background = '#40c057';
-            setTimeout(() => { a.innerHTML = old; a.style.background = 'var(--toss-text-main)'; }, 600); 
-        }); 
-    }
-
+    function copyScore() { const t = document.getElementById('chatDisplay').innerText; navigator.clipboard.writeText(t).then(() => { const a = document.querySelector('.copy-bar'); const old = a.innerHTML; a.innerText = '✅ 채팅 스코어 복사 완료'; a.style.background = '#40c057'; setTimeout(() => { a.innerHTML = old; a.style.background = 'var(--text-main)'; }, 600); }); }
     function copyRawMoney() { navigator.clipboard.writeText(document.getElementById('moneyDisplay').dataset.raw || "0"); }
 
     document.getElementById('ind-1').classList.add('active');

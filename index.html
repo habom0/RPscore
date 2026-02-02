@@ -7,7 +7,6 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-Z3EY0BBYQW');
     </script>
 
@@ -47,16 +46,16 @@
             --nav-height: 75px; 
         }
 
-        /* 다크모드 변수 설정 - 가독성 향상을 위해 카드 색상 조정 */
+        /* 다크모드 변수 설정 */
         body.dark-mode {
             --bg-body: #101012;
             --bg-app: #17171c;
-            --bg-card: #2c2c35;      /* 배경보다 눈에 띄게 더 밝은 톤으로 수정 */
+            --bg-card: #2c2c35;
             --bg-card-hover: #373742;
             --text-main: #f9fafb;
             --text-sub: #d1d6db;
             --text-desc: #8b95a1;
-            --border: #3d3d4a;      /* 명확한 구분을 위해 테두리 색상 강조 */
+            --border: #3d3d4a;
             --nav-bg: #1c1c22;
             --nav-border: rgba(255,255,255,0.12);
             --shadow: 0 8px 32px rgba(0,0,0,0.5);
@@ -78,18 +77,11 @@
             transition: background 0.3s, color 0.3s;
         }
 
-        /* 공통 컨테이너 */
         .app-container { 
-            width: 100%; 
-            max-width: 760px; 
-            background: var(--bg-app); 
-            padding: 2.5rem 1.5rem; 
-            border-radius: 0 0 2.5rem 2.5rem; 
-            box-shadow: var(--shadow);
-            display: flex;
-            flex-direction: column;
-            min-height: calc(100vh - var(--nav-height));
-            position: relative;
+            width: 100%; max-width: 760px; background: var(--bg-app); 
+            padding: 2.5rem 1.5rem; border-radius: 0 0 2.5rem 2.5rem; 
+            box-shadow: var(--shadow); display: flex; flex-direction: column;
+            min-height: calc(100vh - var(--nav-height)); position: relative;
             transition: background 0.3s;
         }
 
@@ -97,30 +89,21 @@
         header h1 { font-size: 1.6rem; font-weight: 800; margin: 0; color: var(--text-main); }
         header .sub-title { font-size: 0.9rem; color: var(--danger); font-weight: 700; margin-top: 6px; display: block; }
 
-        /* 우측 상단 유틸리티 버튼들 */
-        .header-utils {
-            position: absolute; top: 0; right: 0; display: flex; gap: 10px;
-        }
-
+        .header-utils { position: absolute; top: 0; right: 0; display: flex; gap: 10px; }
         .util-btn {
-            width: 32px; height: 32px;
-            background: none; color: var(--text-desc); border: 2.2px solid var(--border);
+            width: 32px; height: 32px; background: none; color: var(--text-desc); border: 2.2px solid var(--border);
             border-radius: 50%; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;
             transition: 0.2s;
         }
         .util-btn:active { transform: scale(0.9); background: var(--bg-card); }
 
-        /* 탭 시스템 */
         .tab-content { display: none; width: 100%; animation: fadeIn 0.4s ease; flex-direction: column; flex: 1; }
         .tab-content.active { display: flex; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- 인원 계산기 스타일 --- */
+        /* 공통 스타일링 */
         .summary-box { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 2.5rem; }
-        .step-indicator { 
-            background: var(--bg-card); padding: 1.2rem 0.5rem; border-radius: 1.2rem; text-align: center;
-            border: 2px solid var(--border); transition: 0.3s;
-        }
+        .step-indicator { background: var(--bg-card); padding: 1.2rem 0.5rem; border-radius: 1.2rem; text-align: center; border: 2px solid var(--border); transition: 0.3s; }
         .step-indicator.active { border-color: var(--primary); background: var(--bg-app); box-shadow: 0 4px 12px rgba(49, 130, 246, 0.15); }
         .label { font-size: 0.85rem; font-weight: 600; color: var(--text-sub); margin-bottom: 6px; display: block; }
         .val { font-size: 1.3rem; font-weight: 800; color: var(--primary); }
@@ -130,11 +113,7 @@
         .input-hero .number { font-size: 4.5rem; font-weight: 800; color: var(--text-main); letter-spacing: -2px; }
 
         .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; width: 100%; max-width: 400px; margin: 0 auto 1.5rem auto; }
-        .key { 
-            height: 75px; font-size: 1.6rem; font-weight: 600; background: var(--bg-card); 
-            border: 1px solid var(--border); border-radius: 1.2rem; cursor: pointer; color: var(--text-main);
-            transition: all 0.1s; display: flex; align-items: center; justify-content: center;
-        }
+        .key { height: 75px; font-size: 1.6rem; font-weight: 600; background: var(--bg-card); border: 1px solid var(--border); border-radius: 1.2rem; cursor: pointer; color: var(--text-main); transition: all 0.1s; display: flex; align-items: center; justify-content: center; }
         .key:active { background: var(--bg-card-hover); transform: scale(0.95); }
         .key.enter { background: var(--primary); color: white; font-size: 1.1rem; font-weight: 700; border: none; }
         .key.del { color: var(--text-sub); }
@@ -144,25 +123,17 @@
         .section-header .title { font-size: 1.1rem; font-weight: 700; color: var(--text-main); }
 
         .btn-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .p-btn { 
-            height: 52px; border: 1px solid var(--border); border-radius: 0.9rem; background: var(--bg-app);
-            color: var(--text-sub); font-weight: 700; font-size: 0.95rem; 
-            cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.04); transition: 0.2s;
-        }
+        .p-btn { height: 52px; border: 1px solid var(--border); border-radius: 0.9rem; background: var(--bg-app); color: var(--text-sub); font-weight: 700; font-size: 0.95rem; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.04); transition: 0.2s; }
         .p-btn:active { background: var(--bg-card-hover); transform: scale(0.97); }
         .p-btn.highlight { background: var(--text-main); color: var(--bg-app); border: none; }
 
         .result-box-container { display: none; }
-        .result-card { 
-            border: 2.5px solid var(--primary); padding: 2.5rem 1.5rem; 
-            border-radius: 2.2rem; text-align: center; margin-top: 2rem; background: rgba(49, 130, 246, 0.01);
-        }
+        .result-card { border: 2.5px solid var(--primary); padding: 2.5rem 1.5rem; border-radius: 2.2rem; text-align: center; margin-top: 2rem; background: rgba(49, 130, 246, 0.01); }
         .res-num { font-size: 5rem; font-weight: 800; color: var(--primary); margin: 0.5rem 0; line-height: 1; }
         .preview-box { background: var(--bg-card-hover); padding: 1.2rem; border-radius: 1.2rem; margin: 1.5rem 0; font-weight: 700; color: var(--text-sub); line-height: 1.6; border: 1px solid var(--border); }
         .copy-btn { width: 100%; height: 65px; background: var(--primary); color: white; border: none; border-radius: 1.2rem; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
         .copy-btn-reason { width: 100%; height: 65px; background: #6b7684; color: white; border: none; border-radius: 1.2rem; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: 0.2s; margin-top: 12px; }
 
-        /* --- 스코어보드 스타일 --- */
         .persistent-settings { background: var(--bg-card); border-radius: 1.5rem; padding: 1.2rem 1.8rem; margin-bottom: 1.5rem; border: 1px solid var(--border); }
         .settings-row { display: grid; grid-template-columns: 0.8fr 0.8fr 1.4fr; gap: 12px; align-items: flex-end; }
         .setting-item { display: flex; flex-direction: column; gap: 6px; }
@@ -190,21 +161,9 @@
         .btn-win-b { background: var(--danger); }
         .btn-win:active { transform: scale(0.96); }
 
-        /* 스코어보드 중앙 정보 바 레이아웃 - 버튼 분리형 */
-        .info-undo-container {
-            display: flex; gap: 10px; width: 100%; max-width: 500px; margin: 0 auto 1.5rem auto;
-        }
-        .rev-turn-box { 
-            flex: 1; background: var(--bg-card); padding: 12px 20px; border-radius: 50px; 
-            text-align: center; border: 2.2px solid var(--border); font-weight: 800; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        }
-        .undo-box-btn { 
-            background: var(--bg-card); color: var(--text-sub); border: 2.2px solid var(--border); 
-            padding: 12px 20px; border-radius: 50px; font-size: 0.85rem; 
-            cursor: pointer; transition: 0.2s; font-weight: 800;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        }
+        .info-undo-container { display: flex; gap: 10px; width: 100%; max-width: 500px; margin: 0 auto 1.5rem auto; }
+        .rev-turn-box { flex: 1; background: var(--bg-card); padding: 12px 20px; border-radius: 50px; text-align: center; border: 2.2px solid var(--border); font-weight: 800; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .undo-box-btn { background: var(--bg-card); color: var(--text-sub); border: 2.2px solid var(--border); padding: 12px 20px; border-radius: 50px; font-size: 0.85rem; cursor: pointer; transition: 0.2s; font-weight: 800; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
         .undo-box-btn:active { transform: scale(0.94); background: var(--bg-card-hover); }
 
         .copy-bar { background: var(--text-main); color: var(--bg-app); padding: 0.6rem 1.8rem; border-radius: 1.2rem; text-align: center; margin-bottom: 1.2rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
@@ -224,14 +183,12 @@
         .money-val { font-size: 1.4rem; font-weight: 900; color: var(--primary); }
         .btn-copy-num { padding: 12px 22px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; }
 
-        /* 도움말 모달 */
         #modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1100; backdrop-filter: blur(4px); }
         .help-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--bg-app); padding: 2.5rem 2rem; border-radius: 2rem; z-index: 1200; width: 85%; max-width: 360px; box-shadow: var(--shadow); border: 1.5px solid var(--border); }
         .help-modal h3 { margin: 0 0 1.2rem 0; font-weight: 800; text-align: center; font-size: 1.2rem; color: var(--text-main); }
         .help-modal p { font-size: 0.95rem; color: var(--text-sub); line-height: 1.7; margin-bottom: 2rem; word-break: keep-all; }
         .help-modal .btn-close { width: 100%; padding: 1rem; border: none; background: var(--primary); color: white; border-radius: 1rem; font-weight: 700; cursor: pointer; font-size: 1rem; }
 
-        /* 하단 네비게이션 */
         .bottom-nav {
             position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 760px; height: var(--nav-height);
             background: var(--nav-bg); display: flex; justify-content: space-around; align-items: center;
@@ -246,7 +203,6 @@
         .nav-item.active span { color: var(--primary); }
         .nav-item:active { background: rgba(128,128,128,0.05); }
 
-        /* 푸터 서명 */
         footer { margin-top: auto; padding: 3rem 0 1.5rem 0; text-align: center; opacity: 0.6; }
         .sig-line { width: 30px; height: 1.5px; background: #d1d6db; margin: 0 auto 12px auto; }
         .sig-crafted { font-size: 0.65rem; color: var(--text-desc); font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 4px; display: block; }
@@ -309,7 +265,6 @@
         </div>
 
         <div id="board-screen" style="display:none;">
-            <!-- 역선포 박스와 되돌리기 버튼 분리 배치 -->
             <div class="info-undo-container">
                 <div class="rev-turn-box">
                     🔄 다음 역선포 차례: <b id="revTeam" style="color:var(--primary); margin-left:8px;">-</b>
@@ -457,7 +412,6 @@
     </div>
 </div>
 
-<!-- 도움말 모달 구조 -->
 <div id="modal-overlay" onclick="closeHelp()"></div>
 <div id="help-modal" class="help-modal">
     <h3 id="help-title">도움말</h3>
@@ -465,7 +419,6 @@
     <button class="btn-close" onclick="closeHelp()">확인</button>
 </div>
 
-<!-- 하단 네비게이션 -->
 <nav class="bottom-nav">
     <div class="nav-item active" id="nav-scoreboard" onclick="switchTab('scoreboard', this)">
         <div class="emoji-icon">⚔️</div>
@@ -481,27 +434,78 @@
     </div>
 </nav>
 
-<script>
-    /* 탭 시스템 */
-    function switchTab(tabId, el) {
+<script type="module">
+    // Firebase 관련 초기화 (다크모드 영구 저장을 위해 필요)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const firebaseConfig = JSON.parse(__firebase_config);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+    
+    let user = null;
+
+    // 인증 및 다크모드 로드 로직
+    const initApp = async () => {
+        try {
+            await signInAnonymously(auth);
+            onAuthStateChanged(auth, async (u) => {
+                user = u;
+                if (user) {
+                    const themeDoc = await getDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'theme'));
+                    if (themeDoc.exists() && themeDoc.data().isDarkMode) {
+                        applyDarkMode(true);
+                    }
+                }
+            });
+        } catch (e) {
+            console.error("Auth initialization failed");
+        }
+    };
+
+    function applyDarkMode(isDark) {
+        if (isDark) {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+        const btnText = isDark ? '☀️' : '🌙';
+        const d1 = document.getElementById('dark-btn');
+        const d2 = document.getElementById('dark-btn-calc');
+        if(d1) d1.innerText = btnText;
+        if(d2) d2.innerText = btnText;
+    }
+
+    // 전역으로 함수 노출 (HTML onclick용)
+    window.toggleDarkMode = async function() {
+        const isCurrentlyDark = document.body.classList.contains('dark-mode');
+        const newMode = !isCurrentlyDark;
+        applyDarkMode(newMode);
+
+        if (user) {
+            try {
+                await setDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'theme'), {
+                    isDarkMode: newMode
+                });
+            } catch (e) {
+                console.error("Failed to save theme");
+            }
+        }
+    };
+
+    // 나머지 함수들 전역 노출
+    window.switchTab = function(tabId, el) {
         document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
         document.getElementById(`tab-${tabId}`).classList.add('active');
         el.classList.add('active');
         window.scrollTo(0,0);
-    }
+    };
 
-    /* 다크모드 시스템 */
-    function toggleDarkMode() {
-        document.body.classList.toggle('dark-mode');
-        const isDark = document.body.classList.contains('dark-mode');
-        const btnText = isDark ? '☀️' : '🌙';
-        document.getElementById('dark-btn').innerText = btnText;
-        document.getElementById('dark-btn-calc').innerText = btnText;
-    }
-
-    /* 도움말 시스템 */
-    function openHelp(type) {
+    window.openHelp = function(type) {
         const title = document.getElementById('help-title');
         const desc = document.getElementById('help-desc');
         if (type === 'calculator') {
@@ -513,48 +517,34 @@
         }
         document.getElementById('modal-overlay').style.display = 'block';
         document.getElementById('help-modal').style.display = 'block';
-    }
-    function closeHelp() {
+    };
+
+    window.closeHelp = function() {
         document.getElementById('modal-overlay').style.display = 'none';
         document.getElementById('help-modal').style.display = 'none';
-    }
-
-    /* 전역 키보드 이벤트 리스너 */
-    window.addEventListener('keydown', e => { 
-        if (document.activeElement.tagName === 'SELECT' || document.activeElement.tagName === 'INPUT') return; 
-        const isCalcActive = document.getElementById('tab-calculator').classList.contains('active');
-        const isBoardActive = document.getElementById('tab-scoreboard').classList.contains('active');
-        if (isCalcActive) {
-            if (e.key >= '0' && e.key <= '9') { e.preventDefault(); pressNum(parseInt(e.key)); }
-            else if (e.key === 'Enter') { e.preventDefault(); pressEnter(); }
-            else if (e.key === 'Backspace') { e.preventDefault(); pressDel(); }
-        }
-        if (isBoardActive && sbState.isStarted) {
-            const k = e.key.toLowerCase(); 
-            if (k === 'q' || k === '1') addWin('A'); 
-            else if (k === 'e' || k === '2') addWin('B'); 
-            else if (k === 'x') undoScore();
-        }
-    });
+    };
 
     /* --- [인원 계산기 로직] --- */
     let calcStep = 1;
     let calcValues = { total: "0", afk: "0", sales: "0" };
     let calcParties = [];
-    function pressNum(num) {
+
+    window.pressNum = function(num) {
         if (calcStep > 3) return;
         const key = calcStep === 1 ? "total" : calcStep === 2 ? "afk" : "sales";
         if (calcValues[key] === "0") calcValues[key] = num.toString();
         else calcValues[key] += num.toString();
         document.getElementById('current-val').innerText = calcValues[key];
-    }
-    function pressDel() {
+    };
+
+    window.pressDel = function() {
         if (calcStep > 3) return;
         const key = calcStep === 1 ? "total" : calcStep === 2 ? "afk" : "sales";
         calcValues[key] = calcValues[key].slice(0, -1) || "0";
         document.getElementById('current-val').innerText = calcValues[key];
-    }
-    function pressEnter() {
+    };
+
+    window.pressEnter = function() {
         if (calcStep <= 3) {
             document.getElementById(`sum-${calcStep}`).innerText = calcValues[calcStep === 1 ? "total" : calcStep === 2 ? "afk" : "sales"];
             document.getElementById(`ind-${calcStep}`).classList.remove('active');
@@ -572,9 +562,11 @@
                 calculateRP();
             }
         }
-    }
-    function addParty(type, count) { calcParties.push({type, count}); calculateRP(); }
-    function removeParty(idx) { calcParties.splice(idx, 1); calculateRP(); }
+    };
+
+    window.addParty = function(type, count) { calcParties.push({type, count}); calculateRP(); };
+    window.removeParty = function(idx) { calcParties.splice(idx, 1); calculateRP(); };
+    
     function calculateRP() {
         const total = parseInt(calcValues.total);
         const afk = parseInt(calcValues.afk);
@@ -583,10 +575,15 @@
         const gechaSum = calcParties.filter(p => p.type === 'GE').reduce((a, b) => a + b.count, 0);
         const final = Math.max(0, total - afk - sales - (groundSum + gechaSum));
         document.getElementById('final-num').innerText = final;
+        
         const listContainer = document.getElementById('party-list');
         listContainer.innerHTML = calcParties.length === 0 ? "<span style='color:#adb5bd;'>목록이 비어 있습니다.</span>" : calcParties.map((p, i) => `<div onclick="removeParty(${i})" style="background:var(--bg-card-hover); padding:8px 16px; border-radius:2rem; font-size:0.9rem; font-weight:700; color:var(--text-sub); cursor:pointer; display:flex; align-items:center; gap:6px; border: 1px solid var(--border);">${p.type==='GC'?(p.count>=6?'지씨':'지디'):'게차'}(${p.count}) <span style="color:var(--danger);">×</span></div>`).join('');
+        
         const stats = {};
-        calcParties.forEach(p => { const k = p.type==='GC'?(p.count>=6?`지씨(${p.count}${p.count})`:`지디(${p.count}${p.count})`):`게차(${p.count})`; stats[k] = (stats[k]||0)+1; });
+        calcParties.forEach(p => { 
+            const k = p.type==='GC'?(p.count>=6?`지씨(${p.count}${p.count})`:`지디(${p.count}${p.count})`):`게차(${p.count})`; 
+            stats[k] = (stats[k]||0)+1; 
+        });
         const pStrings = Object.entries(stats).map(([k, c]) => `${k}${c}`);
         const parts = [`총원 ${total}명`];
         if (afk > 0) parts.push(`잠수 ${afk}명`);
@@ -595,16 +592,33 @@
         parts.push(`대응가능 ${final}명`);
         document.getElementById('preview-text').innerText = parts.join(' / ');
     }
-    function copyResult() { const t = document.getElementById('preview-text').innerText; navigator.clipboard.writeText(t).then(() => { const b = document.querySelector('.copy-btn'); const old = b.innerText; b.innerText = "✅ 복사 완료"; setTimeout(() => b.innerText = old, 1500); }); }
-    function copyShortReason() {
-        const afk = parseInt(calcValues.afk), sales = parseInt(calcValues.sales), stats = {};
-        calcParties.forEach(p => { const k = p.type==='GC'?(p.count>=6?`지씨(${p.count}${p.count})`:`지디(${p.count}${p.count})`):`게차(${p.count})`; stats[k] = (stats[k]||0)+1; });
+
+    window.copyResult = function() {
+        const t = document.getElementById('preview-text').innerText;
+        navigator.clipboard.writeText(t).then(() => {
+            const b = document.querySelector('.copy-btn');
+            const old = b.innerText; b.innerText = "✅ 복사 완료";
+            setTimeout(() => b.innerText = old, 1500);
+        });
+    };
+
+    window.copyShortReason = function() {
+        const afk = parseInt(calcValues.afk), stats = {};
+        const sales = parseInt(calcValues.sales);
+        calcParties.forEach(p => { 
+            const k = p.type==='GC'?(p.count>=6?`지씨(${p.count}${p.count})`:`지디(${p.count}${p.count})`):`게차(${p.count})`; 
+            stats[k] = (stats[k]||0)+1; 
+        });
         const parts = [], pStrings = Object.entries(stats).map(([k, c]) => `${k}${c}`);
         if (afk > 0) parts.push(`잠수 ${afk}명`);
         if (pStrings.length > 0) parts.push(...pStrings);
         if (sales > 0) parts.push(`판매직 ${sales}명`);
-        navigator.clipboard.writeText(parts.length > 0 ? parts.join(' / ') : "사유 없음").then(() => { const b = document.querySelector('.copy-btn-reason'); const old = b.innerText; b.innerText = "✅ 사유 복사 완료"; setTimeout(() => b.innerText = old, 1500); });
-    }
+        navigator.clipboard.writeText(parts.length > 0 ? parts.join(' / ') : "사유 없음").then(() => { 
+            const b = document.querySelector('.copy-btn-reason');
+            const old = b.innerText; b.innerText = "✅ 사유 복사 완료";
+            setTimeout(() => b.innerText = old, 1500);
+        });
+    };
 
     /* --- [스코어보드 로직] --- */
     let sbState = { isStarted: false, initial: 'A', currentSetAttacker: 'A', largeA: 0, largeB: 0, smallA: 0, smallB: 0, roundLogs: [], reverseTurn: 'B' };
@@ -612,7 +626,7 @@
 
     function saveSBHistory() { sbHistory.push(JSON.parse(JSON.stringify(sbState))); if(sbHistory.length > 50) sbHistory.shift(); }
 
-    function setInitial(t) { 
+    window.setInitial = function(t) { 
         saveSBHistory();
         sbState.isStarted = true; sbState.initial = t; sbState.currentSetAttacker = t; sbState.reverseTurn = (t === 'A') ? 'B' : 'A'; 
         document.getElementById('setup-screen').style.display = 'none';
@@ -620,9 +634,9 @@
         document.getElementById('miniA').className = t === 'A' ? 'btn-init-mini active-a' : 'btn-init-mini';
         document.getElementById('miniB').className = t === 'B' ? 'btn-init-mini active-b' : 'btn-init-mini';
         renderScoreboard(); 
-    }
+    };
 
-    function addWin(t) { 
+    window.addWin = function(t) { 
         if(!sbState.isStarted) return; 
         saveSBHistory();
         let p = sbState.smallA + sbState.smallB, f = (p % 2 !== 0); 
@@ -636,9 +650,9 @@
             sbState.smallA = 0; sbState.smallB = 0; sbState.roundLogs = []; 
         } 
         renderScoreboard(); 
-    }
+    };
 
-    function undoScore() {
+    window.undoScore = function() {
         if (sbHistory.length === 0) return;
         sbState = sbHistory.pop();
         if (!sbState.isStarted) {
@@ -646,9 +660,9 @@
             document.getElementById('board-screen').style.display = 'none';
         }
         renderScoreboard();
-    }
+    };
 
-    function renderScoreboard() {
+    window.renderScoreboard = function() {
         if(!sbState.isStarted) return;
         document.getElementById('lScoreA').innerText = sbState.largeA; document.getElementById('lScoreB').innerText = sbState.largeB;
         document.getElementById('sScoreA').innerText = sbState.smallA; document.getElementById('sScoreB').innerText = sbState.smallB;
@@ -664,12 +678,42 @@
         document.getElementById('moneyDisplay').dataset.raw = m;
         const sb = document.getElementById('smallHistoryBody'); sb.innerHTML = '';
         for(let i=0; i<5; i++) { const l = sbState.roundLogs[i]; sb.innerHTML += `<tr><td>라운드 ${i+1}</td><td class="${l&&l.winner==='A'?'hist-winner-a':''}">${l&&l.winner==='A'?'['+l.sideA+'] 득점':'-'}</td><td class="${l&&l.winner==='B'?'hist-winner-b':''}">${l&&l.winner==='B'?'['+l.sideB+'] 득점':'-'}</td></tr>`; }
-    }
+    };
 
-    function copyScore() { const t = document.getElementById('chatDisplay').innerText; navigator.clipboard.writeText(t).then(() => { const a = document.querySelector('.copy-bar'); const old = a.innerHTML; a.innerText = '✅ 채팅 스코어 복사 완료'; a.style.background = '#40c057'; setTimeout(() => { a.innerHTML = old; a.style.background = 'var(--text-main)'; }, 600); }); }
-    function copyRawMoney() { navigator.clipboard.writeText(document.getElementById('moneyDisplay').dataset.raw || "0"); }
+    window.copyScore = function() {
+        const t = document.getElementById('chatDisplay').innerText;
+        navigator.clipboard.writeText(t).then(() => {
+            const a = document.querySelector('.copy-bar'); const old = a.innerHTML;
+            a.innerText = '✅ 채팅 스코어 복사 완료'; a.style.background = '#40c057';
+            setTimeout(() => { a.innerHTML = old; a.style.background = 'var(--text-main)'; }, 600);
+        });
+    };
+
+    window.copyRawMoney = function() {
+        navigator.clipboard.writeText(document.getElementById('moneyDisplay').dataset.raw || "0");
+    };
+
+    window.addEventListener('keydown', e => { 
+        if (document.activeElement.tagName === 'SELECT' || document.activeElement.tagName === 'INPUT') return; 
+        const isCalcActive = document.getElementById('tab-calculator').classList.contains('active');
+        const isBoardActive = document.getElementById('tab-scoreboard').classList.contains('active');
+        if (isCalcActive) {
+            if (e.key >= '0' && e.key <= '9') { e.preventDefault(); pressNum(parseInt(e.key)); }
+            else if (e.key === 'Enter') { e.preventDefault(); pressEnter(); }
+            else if (e.key === 'Backspace') { e.preventDefault(); pressDel(); }
+        }
+        if (isBoardActive && sbState.isStarted) {
+            const k = e.key.toLowerCase(); 
+            if (k === 'q' || k === '1') addWin('A'); 
+            else if (k === 'e' || k === '2') addWin('B'); 
+            else if (k === 'x') undoScore();
+        }
+    });
 
     document.getElementById('ind-1').classList.add('active');
+    
+    // 앱 초기화 실행
+    initApp();
 </script>
 
 </body>
